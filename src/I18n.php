@@ -49,6 +49,17 @@ class I18n
     }
 
     /**
+     * Check if language exists
+     *
+     * @param string $language
+     * @return boolean
+     */
+    public function isLanguageExists($language)
+    {
+        return isset($this->context->languages[$language]);
+    }
+
+    /**
      * The shared context
      *
      * @var \go\I18n\Helpers\Context
