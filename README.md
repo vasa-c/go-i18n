@@ -1,4 +1,7 @@
-go-i18n
-=======
+# go\I18n
 
-Internationalization (PHP) [under construction]
+PHP library for internationalization.
+
+Version: under construction
+
+Uses PHP 5.3+
