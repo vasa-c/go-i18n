@@ -39,6 +39,16 @@ class I18n
     }
 
     /**
+     * Get the default language
+     *
+     * @return string
+     */
+    public function getDefaultLanguage()
+    {
+        return $this->context->default;
+    }
+
+    /**
      * The shared context
      *
      * @var \go\I18n\Helpers\Context
