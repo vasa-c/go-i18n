@@ -18,6 +18,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers go\I18n\I18n::__construct
+     * @covers go\I18n\I18n::getListLanguages
      */
     public function testConstructAndInfo()
     {
@@ -30,7 +31,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
             'default' => 'en',
         );
         $i18n = new I18n($config);
-        return $i18n;
+        $this->assertEquals(array('en', 'ru', 'it'), $i18n->getListLanguages());
     }
 
     /**

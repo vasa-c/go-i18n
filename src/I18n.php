@@ -29,6 +29,16 @@ class I18n
     }
 
     /**
+     * Get a plain list of languages
+     *
+     * @return array
+     */
+    public function getListLanguages()
+    {
+        return \array_keys($this->context->languages);
+    }
+
+    /**
      * The shared context
      *
      * @var \go\I18n\Helpers\Context
