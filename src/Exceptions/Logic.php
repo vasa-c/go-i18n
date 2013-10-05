@@ -26,5 +26,5 @@ abstract class Logic extends \LogicException implements Exception
      *
      * @var string
      */
-    protected $errorMessage = 'Logic exception';
+    protected $errorMessage = 'I18n logic exception';
 }

@@ -74,6 +74,20 @@ class I18n
     }
 
     /**
+     * Set the current language
+     *
+     * @param string $language
+     * @throws \go\I18n\Exceptions\CurrentAlreadySpecified
+     */
+    public function setCurrentLanguage($language)
+    {
+        if ($this->context->current) {
+            throw new Exceptions\CurrentAlreadySpecified();
+        }
+        $this->context->current = $language;
+    }
+
+    /**
      * The shared context
      *
      * @var \go\I18n\Helpers\Context

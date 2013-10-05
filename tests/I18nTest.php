@@ -80,6 +80,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers go\I18n\I18n::__construct
      * @covers go\I18n\I18n::getCurrentLanguage
+     * @covers go\I18n\I18n::setCurrentLanguage
      */
     public function testCurrentLanguage()
     {
@@ -92,8 +93,12 @@ class I18nTest extends \PHPUnit_Framework_TestCase
         );
         $i18n1 = new I18n($config);
         $this->assertNull($i18n1->getCurrentLanguage());
+        $i18n1->setCurrentLanguage('en');
+        $this->assertEquals('en', $i18n1->getCurrentLanguage());
 
         $i18n2 = new I18n($config, 'ru');
         $this->assertEquals('ru', $i18n2->getCurrentLanguage());
+        $this->setExpectedException('go\I18n\Exceptions\CurrentAlreadySpecified');
+        $i18n2->setCurrentLanguage('en');
     }
 }
