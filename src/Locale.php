@@ -11,6 +11,8 @@ namespace go\I18n;
 /**
  * @property-read string $language
  *                the language for this locale
+ * @property-read array $paramsLanguage
+ *                the parameters list of language
  */
 class Locale
 {
@@ -39,6 +41,8 @@ class Locale
         switch ($key) {
             case 'language':
                 return $this->language;
+            case 'paramsLanguage':
+                return $this->context->languages[$this->language];
         }
     }
 

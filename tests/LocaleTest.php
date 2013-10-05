@@ -46,7 +46,13 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLanguage()
     {
-        $local = $this->createLocale('ru');
-        $this->assertEquals('ru', $local->language);
+        $local = $this->createLocale('by');
+        $this->assertEquals('by', $local->language);
+        $expected = array(
+            'title' => 'by',
+            'parent' => 'ru',
+            'url' => 'by',
+        );
+        $this->assertEquals($expected, $local->paramsLanguage);
     }
 }
