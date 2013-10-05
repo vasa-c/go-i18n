@@ -49,6 +49,13 @@ class Context
     public $current;
 
     /**
+     * The cache of locale instances
+     *
+     * @var array
+     */
+    public $locals = array();
+
+    /**
      * Constructor
      *
      * @param \go\I18n\I18n $i18n

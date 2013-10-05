@@ -89,6 +89,22 @@ class I18n
     }
 
     /**
+     * Get the locale for the specified language
+     *
+     * @param string $language
+     * @return \go\I18n\Locale
+     * @throws \go\I18n\Exceptions\LanguageNotExists
+     */
+    public function getLocale($language)
+    {
+        $locals = &$this->context->locals;
+        if (!isset($locals[$language])) {
+            $locals[$language] = new Locale($this->context, $language);
+        }
+        return $locals[$language];
+    }
+
+    /**
      * The shared context
      *
      * @var \go\I18n\Helpers\Context

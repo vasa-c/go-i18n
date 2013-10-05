@@ -91,7 +91,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
             ),
             'default' => 'en',
         );
-        
+
         $i18n1 = new I18n($config);
         $this->assertNull($i18n1->getCurrentLanguage());
         $i18n1->setCurrentLanguage('en');
@@ -119,5 +119,29 @@ class I18nTest extends \PHPUnit_Framework_TestCase
         } catch (\go\I18n\Exceptions\LanguageNotExists $e) {
             $this->assertEquals('it', $e->getLanguage());
         }
+    }
+
+    /**
+     * @covers go\I18n\I18n::getLocale
+     */
+    public function testGetLocale()
+    {
+        $config = array(
+            'languages' => array(
+                'en' => true,
+                'ru' => true,
+            ),
+            'default' => 'en',
+        );
+        $i18n = new I18n($config);
+        $en = $i18n->getLocale('en');
+        $ru = $i18n->getLocale('ru');
+        $this->assertInstanceOf('go\I18n\Locale', $en);
+        $this->assertEquals('en', $en->language);
+        $this->assertEquals('ru', $ru->language);
+        $this->assertSame($ru, $i18n->getLocale('ru'), 'Cache locals');
+
+        $this->setExpectedException('go\I18n\Exceptions\LanguageNotExists');
+        $i18n->getLocale('it');
     }
 }
