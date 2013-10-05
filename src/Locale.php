@@ -14,8 +14,18 @@ namespace go\I18n;
  * @property-read array $paramsLanguage
  *                the parameters list of language
  */
-class Locale
+class Locale extends Helpers\MagicFields
 {
+    /**
+     * @override \go\I18n\Helpers\MagicFields
+     *
+     * @var array
+     */
+    protected $magicFields = array(
+        'language' => true,
+        'paramsLanguage' => true,
+    );
+
     /**
      * Constructor
      *
@@ -33,10 +43,12 @@ class Locale
     }
 
     /**
+     * @override \go\I18n\Helpers\MagicFields
+     *
      * @param string $key
      * @return mixed
      */
-    public function __get($key)
+    protected function magicFieldCreate($key)
     {
         switch ($key) {
             case 'language':

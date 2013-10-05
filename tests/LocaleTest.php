@@ -54,5 +54,7 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
             'url' => 'by',
         );
         $this->assertEquals($expected, $local->paramsLanguage);
+        $this->assertTrue(isset($local->language));
+        $this->assertFalse(isset($local->unknown));
     }
 }
