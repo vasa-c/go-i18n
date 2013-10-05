@@ -9,6 +9,7 @@
 namespace go\I18n\Helpers;
 
 use go\I18n\Exceptions\ConfigInvalid;
+use go\I18n\Exceptions\LanguageNotExists;
 
 class Context
 {
@@ -66,5 +67,18 @@ class Context
             throw new ConfigInvalid('The field "languages" is not specified');
         }
         $this->languages = ConfigNormalizer::languagesNormalize($config['languages'], $this->default);
+    }
+
+    /**
+     * A language exists or die
+     *
+     * @param string $language
+     * @throws \go\I18n\Exceptions\LanguageNotExists
+     */
+    public function mustLanguageExists($language)
+    {
+        if (!isset($this->languages[$language])) {
+            throw new LanguageNotExists($language);
+        }
     }
 }

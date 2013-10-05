@@ -84,6 +84,7 @@ class I18n
         if ($this->context->current) {
             throw new Exceptions\CurrentAlreadySpecified();
         }
+        $this->context->mustLanguageExists($language);
         $this->context->current = $language;
     }
 

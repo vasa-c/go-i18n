@@ -91,14 +91,33 @@ class I18nTest extends \PHPUnit_Framework_TestCase
             ),
             'default' => 'en',
         );
+        
         $i18n1 = new I18n($config);
         $this->assertNull($i18n1->getCurrentLanguage());
         $i18n1->setCurrentLanguage('en');
         $this->assertEquals('en', $i18n1->getCurrentLanguage());
+        try {
+            $i18n1->setCurrentLanguage('en');
+            $this->fail('CurrentAlreadySpecified has not been raised');
+        } catch (\go\I18n\Exceptions\CurrentAlreadySpecified $e) {
+            $this->assertNotEmpty($e);
+        }
 
         $i18n2 = new I18n($config, 'ru');
         $this->assertEquals('ru', $i18n2->getCurrentLanguage());
-        $this->setExpectedException('go\I18n\Exceptions\CurrentAlreadySpecified');
-        $i18n2->setCurrentLanguage('en');
+        try {
+            $i18n2->setCurrentLanguage('en');
+            $this->fail('CurrentAlreadySpecified has not been raised');
+        } catch (\go\I18n\Exceptions\CurrentAlreadySpecified $e) {
+            $this->assertNotEmpty($e);
+        }
+
+        $i18n3 = new I18n($config);
+        try {
+            $i18n3->setCurrentLanguage('it');
+            $this->fail('LanguageNotExists has not been raised');
+        } catch (\go\I18n\Exceptions\LanguageNotExists $e) {
+            $this->assertEquals('it', $e->getLanguage());
+        }
     }
 }
