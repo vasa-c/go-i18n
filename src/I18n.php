@@ -19,13 +19,16 @@ class I18n
      * Constructor
      *
      * @param array $config
-     *        system config
+     *        the system config
      * @param string $current [optional]
-     *        current language
+     *        the current language
      */
     public function __construct(array $config, $current = null)
     {
         $this->context = new Helpers\Context($this, $config);
+        if ($current) {
+            $this->context->current = $current;
+        }
     }
 
     /**
@@ -49,7 +52,7 @@ class I18n
     }
 
     /**
-     * Check if language exists
+     * Check if the language exists
      *
      * @param string $language
      * @return boolean
@@ -57,6 +60,17 @@ class I18n
     public function isLanguageExists($language)
     {
         return isset($this->context->languages[$language]);
+    }
+
+    /**
+     * Get the current language
+     *
+     * @return string
+     *         the current language or NULL if it is not specified
+     */
+    public function getCurrentLanguage()
+    {
+        return $this->context->current;
     }
 
     /**

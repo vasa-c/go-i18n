@@ -41,6 +41,13 @@ class Context
     public $default;
 
     /**
+     * The current language
+     *
+     * @var string
+     */
+    public $current;
+
+    /**
      * Constructor
      *
      * @param \go\I18n\I18n $i18n

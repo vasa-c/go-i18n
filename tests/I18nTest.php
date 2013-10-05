@@ -76,4 +76,24 @@ class I18nTest extends \PHPUnit_Framework_TestCase
             ),
         );
     }
+
+    /**
+     * @covers go\I18n\I18n::__construct
+     * @covers go\I18n\I18n::getCurrentLanguage
+     */
+    public function testCurrentLanguage()
+    {
+        $config = array(
+            'languages' => array(
+                'en' => true,
+                'ru' => true,
+            ),
+            'default' => 'en',
+        );
+        $i18n1 = new I18n($config);
+        $this->assertNull($i18n1->getCurrentLanguage());
+
+        $i18n2 = new I18n($config, 'ru');
+        $this->assertEquals('ru', $i18n2->getCurrentLanguage());
+    }
 }
