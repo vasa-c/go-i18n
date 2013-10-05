@@ -13,7 +13,7 @@ namespace go\I18n;
 /**
  * Class of main internationalization object
  */
-class I18n
+class I18n extends Helpers\MagicFields
 {
     /**
      * Constructor
