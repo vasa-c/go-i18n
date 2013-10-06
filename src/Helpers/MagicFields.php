@@ -93,7 +93,6 @@ abstract class MagicFields
      *
      * @param string $key
      * @return mixed
-     * @throws \go\I18n\Exceptions\FieldNotFound
      */
     protected function magicFieldCreate($key)
     {

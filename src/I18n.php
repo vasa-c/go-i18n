@@ -12,6 +12,9 @@ namespace go\I18n;
 
 /**
  * Class of main internationalization object
+ *
+ * @property-read \go\I18n\Locale $current
+ *                the current locale
  */
 class I18n extends Helpers\MagicFields
 {
@@ -102,6 +105,43 @@ class I18n extends Helpers\MagicFields
             $locals[$language] = new Locale($this->context, $language);
         }
         return $locals[$language];
+    }
+
+    /**
+     * Get the current locale
+     *
+     * @return \go\I18n\Locale
+     * @throws \go\I18n\Exceptions\CurrentNotSpecified
+     */
+    public function getCurrentLocale()
+    {
+        if (!$this->context->current) {
+            throw new Exceptions\CurrentNotSpecified();
+        }
+        return $this->getLocale($this->context->current);
+    }
+
+    /**
+     * @override \go\I18n\Helpers\MagicFields
+     *
+     * @var array
+     */
+    protected $magicFields = array(
+        'current' => true,
+    );
+
+    /**
+     * @override \go\I18n\Helpers\MagicFields
+     *
+     * @param string $key
+     * @return mixed
+     */
+    protected function magicFieldCreate($key)
+    {
+        switch ($key) {
+            case 'current':
+                return $this->getCurrentLocale();
+        }
     }
 
     /**
