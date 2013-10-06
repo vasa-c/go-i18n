@@ -132,6 +132,15 @@ abstract class Base implements IIO
     }
 
     /**
+     * @param \go\I18n\IO\IIO $io [optional]
+     * @return \go\I18n\IO\IIO
+     */
+    public static function getIOObject($io = null)
+    {
+        return $io ?: new Native();
+    }
+
+    /**
      * @param string $filename
      * @return boolean
      */
