@@ -16,6 +16,16 @@ use go\I18n\I18n;
  */
 class I18nTest extends \PHPUnit_Framework_TestCase
 {
+    private $testConfig = array(
+        'languages' => array(
+            'en' => true,
+            'ru' => true,
+            'de' => true,
+            'by' => 'ru',
+        ),
+        'default' => 'en',
+    );
+
     /**
      * @covers go\I18n\I18n::__construct
      * @covers go\I18n\I18n::getListLanguages
@@ -24,16 +34,8 @@ class I18nTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstructAndInfo()
     {
-        $config = array(
-            'languages' => array(
-                'en' => true,
-                'ru' => true,
-                'it' => true,
-            ),
-            'default' => 'en',
-        );
-        $i18n = new I18n($config);
-        $this->assertEquals(array('en', 'ru', 'it'), $i18n->getListLanguages());
+        $i18n = new I18n($this->testConfig);
+        $this->assertEquals(array('en', 'ru', 'de', 'by'), $i18n->getListLanguages());
         $this->assertEquals('en', $i18n->getDefaultLanguage());
         $this->assertTrue($i18n->isLanguageExists('ru'));
         $this->assertFalse($i18n->isLanguageExists('jp'));
@@ -84,15 +86,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
      */
     public function testCurrentLanguage()
     {
-        $config = array(
-            'languages' => array(
-                'en' => true,
-                'ru' => true,
-            ),
-            'default' => 'en',
-        );
-
-        $i18n1 = new I18n($config);
+        $i18n1 = new I18n($this->testConfig);
         $this->assertNull($i18n1->getCurrentLanguage());
         $i18n1->setCurrentLanguage('en');
         $this->assertEquals('en', $i18n1->getCurrentLanguage());
@@ -103,7 +97,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
             $this->assertNotEmpty($e);
         }
 
-        $i18n2 = new I18n($config, 'ru');
+        $i18n2 = new I18n($this->testConfig, 'ru');
         $this->assertEquals('ru', $i18n2->getCurrentLanguage());
         try {
             $i18n2->setCurrentLanguage('en');
@@ -112,7 +106,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
             $this->assertNotEmpty($e);
         }
 
-        $i18n3 = new I18n($config);
+        $i18n3 = new I18n($this->testConfig);
         try {
             $i18n3->setCurrentLanguage('it');
             $this->fail('LanguageNotExists has not been raised');
@@ -126,14 +120,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLocale()
     {
-        $config = array(
-            'languages' => array(
-                'en' => true,
-                'ru' => true,
-            ),
-            'default' => 'en',
-        );
-        $i18n = new I18n($config);
+        $i18n = new I18n($this->testConfig);
         $en = $i18n->getLocale('en');
         $ru = $i18n->getLocale('ru');
         $this->assertInstanceOf('go\I18n\Locale', $en);
