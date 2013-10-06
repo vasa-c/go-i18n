@@ -53,6 +53,16 @@ class Locale extends Helpers\MagicFields
     }
 
     /**
+     * Check if the locale language is default for i18n
+     *
+     * @return boolean
+     */
+    public function isDefault()
+    {
+        return ($this->language === $this->context->default);
+    }
+
+    /**
      * @override \go\I18n\Helpers\MagicFields
      *
      * @param string $key

@@ -60,7 +60,7 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @cover go\I18n\Local::isCurrent
+     * @cover go\I18n\Locale::isCurrent
      */
     public function testIsCurrent()
     {
@@ -72,5 +72,15 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
         $i18n->setCurrentLanguage('ru');
         $this->assertTrue($ru->isCurrent());
         $this->assertFalse($en->isCurrent());
+    }
+
+    /**
+     * @covers go\I18n\Locale::isDefault
+     */
+    public function testIsDefault()
+    {
+        $i18n = new \go\I18n\I18n($this->testConfig);
+        $this->assertTrue($i18n->getLocale('en')->isDefault());
+        $this->assertFalse($i18n->getLocale('ru')->isDefault());
     }
 }
