@@ -52,7 +52,18 @@ class Native extends Base
      */
     protected function doGetContentsByLines($filename)
     {
-        return @\file($filename, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
+        $result = @\file($filename);
+        if (!\is_array($result)) {
+            return false;
+        }
+        $lines = array();
+        foreach ($result as $line) {
+            $line = \trim($line);
+            if (!empty($line)) {
+                $lines[] = $line;
+            }
+        }
+        return $lines;
     }
 
     /**
