@@ -147,4 +147,20 @@ class I18nTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('go\I18n\Exceptions\CurrentNotSpecified');
         $i18n2->getCurrentLocale();
     }
+
+    /**
+     * @covers go\I18n\I18n::__get
+     * @covers go\I18n\I18n::__isset
+     */
+    public function testMagicGetLocales()
+    {
+        $i18n = new I18n($this->testConfig);
+        $this->assertTrue(isset($i18n->en));
+        $this->assertTrue(isset($i18n->ru));
+        $this->assertFalse(isset($i18n->jp));
+        $this->assertEquals('ru', $i18n->ru->language);
+        $this->assertEquals($i18n->en, $i18n->en);
+        $this->setExpectedException('go\I18n\Exceptions\FieldNotFound');
+        return $i18n->jp;
+    }
 }

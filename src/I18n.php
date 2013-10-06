@@ -142,6 +142,18 @@ class I18n extends Helpers\MagicFields
             case 'current':
                 return $this->getCurrentLocale();
         }
+        return $this->getLocale($key);
+    }
+
+    /**
+     * @override \go\I18n\Helpers\MagicFields
+     *
+     * @param string $key
+     * @return boolean
+     */
+    protected function magicFieldIsset($key)
+    {
+        return isset($this->context->languages[$key]);
     }
 
     /**
