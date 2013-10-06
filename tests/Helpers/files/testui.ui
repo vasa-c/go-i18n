@@ -1,0 +1,24 @@
+# This is file for test of .ui-files format
+
+global_1 : One
+global_2 : Two
+
+# Section of days
+[Days]
+    name[] : Mon, Tue, Web
+    short[] : M, T, W
+    
+[Section]
+    var : value
+    var2 : value2
+
+[Section.Sub.Subsection]
+    var: value3
+    var4: value4
+    
+# Root again
+[]
+global_3: Three
+
+[Section.Sub]
+    subvar: subval
