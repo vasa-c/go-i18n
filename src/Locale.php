@@ -43,6 +43,16 @@ class Locale extends Helpers\MagicFields
     }
 
     /**
+     * Check if the locale language is current for i18n
+     *
+     * @return boolean
+     */
+    public function isCurrent()
+    {
+        return ($this->language === $this->context->current);
+    }
+
+    /**
      * @override \go\I18n\Helpers\MagicFields
      *
      * @param string $key

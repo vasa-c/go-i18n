@@ -100,11 +100,11 @@ class I18n extends Helpers\MagicFields
      */
     public function getLocale($language)
     {
-        $locals = &$this->context->locals;
-        if (!isset($locals[$language])) {
-            $locals[$language] = new Locale($this->context, $language);
+        $locales = &$this->context->locales;
+        if (!isset($locales[$language])) {
+            $locales[$language] = new Locale($this->context, $language);
         }
-        return $locals[$language];
+        return $locales[$language];
     }
 
     /**

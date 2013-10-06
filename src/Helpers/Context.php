@@ -53,7 +53,7 @@ class Context
      *
      * @var array
      */
-    public $locals = array();
+    public $locales = array();
 
     /**
      * Constructor

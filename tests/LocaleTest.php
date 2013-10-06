@@ -43,18 +43,34 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @cover go\I18n\Local::$language
+     * @cover go\I18n\Local::$paramsLanguage
      */
     public function testGetLanguage()
     {
-        $local = $this->createLocale('by');
-        $this->assertEquals('by', $local->language);
+        $locale = $this->createLocale('by');
+        $this->assertEquals('by', $locale->language);
         $expected = array(
             'title' => 'by',
             'parent' => 'ru',
             'url' => 'by',
         );
-        $this->assertEquals($expected, $local->paramsLanguage);
-        $this->assertTrue(isset($local->language));
-        $this->assertFalse(isset($local->unknown));
+        $this->assertEquals($expected, $locale->paramsLanguage);
+        $this->assertTrue(isset($locale->language));
+        $this->assertFalse(isset($locale->unknown));
+    }
+
+    /**
+     * @cover go\I18n\Local::isCurrent
+     */
+    public function testIsCurrent()
+    {
+        $i18n = new \go\I18n\I18n($this->testConfig);
+        $ru = $i18n->getLocale('ru');
+        $en = $i18n->getLocale('en');
+        $this->assertFalse($ru->isCurrent());
+        $this->assertFalse($en->isCurrent());
+        $i18n->setCurrentLanguage('ru');
+        $this->assertTrue($ru->isCurrent());
+        $this->assertFalse($en->isCurrent());
     }
 }
