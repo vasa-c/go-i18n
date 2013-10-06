@@ -45,13 +45,13 @@ interface IIO
     public function getContents($filename);
 
     /**
-     * Reads the entire file into an array
+     * Reads the entire file into an array (skip empty lines)
      *
      * @param string $filename
      * @return array
      * @throws \go\I18n\Exceptions\IOError
      */
-    public function getContentsByLine($filename);
+    public function getContentsByLines($filename);
 
     /**
      * Execute the php file and return result
