@@ -34,7 +34,13 @@ class ConfigNormalizer
                     $params['url'] = $key;
                 }
             } else {
-                $parent = \is_string($params) ? $params : $default;
+                if (\is_string($params)) {
+                    $parent = $params;
+                } elseif ($key !== $default) {
+                    $parent = $default;
+                } else {
+                    $parent = null;
+                }
                 $params = array(
                     'title' => $key,
                     'parent' => $parent,

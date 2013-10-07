@@ -71,5 +71,13 @@ class ConfigNormalizerTest extends \PHPUnit_Framework_TestCase
         );
         $actual = ConfigNormalizer::languagesNormalize($languages, 'en');
         $this->assertEquals($expected, $actual);
+        $languages['en'] = true;
+        $expected['en'] = array(
+            'title' => 'en',
+            'parent' => null,
+            'url' => 'en',
+        );
+        $actual = ConfigNormalizer::languagesNormalize($languages, 'en');
+        $this->assertEquals($expected, $actual);
     }
 }
