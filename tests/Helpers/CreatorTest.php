@@ -55,6 +55,7 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
     {
         $default = 'go\Tests\I18n\Helpers\mocks\Created';
         $this->assertInstanceOf($default, Creator::create(null, $default));
+        $this->assertInstanceOf($default, Creator::create(true, $default));
         $this->setExpectedException('go\I18n\Exceptions\ConfigInvalid');
         Creator::create(null);
     }
@@ -80,6 +81,24 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($params2, $actual2->getParams());
         $this->setExpectedException('go\I18n\Exceptions\ConfigInvalid');
         Creator::create($params2);
+    }
+
+    /**
+     * @covers go\I18n\Helpers\Creator::create
+     * @expectedException go\I18n\Exceptions\ServiceDisabled
+     */
+    public function testCreateFalse()
+    {
+        Creator::create(false, 'go\Tests\I18n\Helpers\mocks\Created');
+    }
+
+    /**
+     * @covers go\I18n\Helpers\Creator::create
+     * @expectedException go\I18n\Exceptions\ConfigInvalid
+     */
+    public function testCreateInvalidValue()
+    {
+        Creator::create(123);
     }
 
     /**

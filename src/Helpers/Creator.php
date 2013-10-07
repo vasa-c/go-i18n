@@ -9,6 +9,7 @@
 namespace go\I18n\Helpers;
 
 use go\I18n\Exceptions\ConfigInvalid;
+use go\I18n\Exceptions\ServiceDisabled;
 
 class Creator
 {
@@ -35,9 +36,16 @@ class Creator
             if (\is_array($params)) {
                 $classname = isset($params['classname']) ? $params['classname'] : null;
                 $arg = $params;
-            } else {
+            } elseif (\is_string($params)) {
                 $classname = $params;
                 $arg = array();
+            } elseif (\is_null($params) || ($params === true)) {
+                $classname = null;
+                $arg = array();
+            } elseif ($params === false) {
+                throw new ServiceDisabled($key);
+            } else {
+                throw new ConfigInvalid($key.': is not valid');
             }
             if (!$classname) {
                 if (!$default) {
