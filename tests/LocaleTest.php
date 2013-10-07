@@ -83,4 +83,16 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($i18n->getLocale('en')->isDefault());
         $this->assertFalse($i18n->getLocale('ru')->isDefault());
     }
+
+    /**
+     * @covers go\I18n\Locale::$parent
+     */
+    public function testParent()
+    {
+        $i18n = new \go\I18n\I18n($this->testConfig);
+        $by = $i18n->getLocale('by');
+        $this->assertEquals('ru', $by->parent->language);
+        $this->assertEquals('en', $by->parent->parent->language);
+        $this->assertNull($by->parent->parent->parent);
+    }
 }
