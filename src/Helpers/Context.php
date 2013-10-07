@@ -88,4 +88,25 @@ class Context
             throw new LanguageNotExists($language);
         }
     }
+
+    /**
+     * Get the IO-implementation for this system
+     *
+     * @return \go\I18n\IO\IIO
+     */
+    public function getIO()
+    {
+        if (!$this->io) {
+            $config = isset($this->config['io']) ? $this->config['io'] : null;
+            $default = 'go\I18n\IO\Native';
+            $base = 'go\I18n\IO\IIO';
+            $this->io = Creator::create($config, $default, $base, 'io');
+        }
+        return $this->io;
+    }
+
+    /**
+     * @var \go\I18n\IO\IIO
+     */
+    private $io;
 }
