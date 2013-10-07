@@ -28,10 +28,14 @@ abstract class Base implements IIO
             if (!isset($cache['dirs'])) {
                 $cache['dirs'] = array();
             }
+            if (!isset($cache['full'])) {
+                $cache['full'] = false;
+            }
         } else {
             $cache = array(
                 'files' => array(),
                 'dirs' => array(),
+                'full' => false,
             );
         }
         $this->cache = $cache;
@@ -48,6 +52,9 @@ abstract class Base implements IIO
         if (isset($this->cache['files'][$filename])) {
             return true;
         }
+        if ($this->cache['full']) {
+            return false;
+        }
         return $this->doIsFile($filename);
     }
 
@@ -61,6 +68,9 @@ abstract class Base implements IIO
     {
         if (isset($this->cache['dirs'][$dirname])) {
             return true;
+        }
+        if ($this->cache['full']) {
+            return false;
         }
         return $this->doIsDir($dirname);
     }
@@ -79,6 +89,8 @@ abstract class Base implements IIO
             if (\is_int($mtime)) {
                 return $mtime;
             }
+        } elseif ($this->cache['full']) {
+            throw new IOError($filename, 'Get modification time');
         }
         $mtime = $this->doGetModificationTime($filename);
         if ($mtime === false) {

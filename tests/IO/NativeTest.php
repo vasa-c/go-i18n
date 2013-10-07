@@ -121,4 +121,36 @@ class NativeTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('go\I18n\Exceptions\IOError');
         $this->assertEquals(12345, $io->getModificationTime(__DIR__.'/testdir/unkmt.txt'));
     }
+
+    /**
+     * @covers go\I18n\IO\Native::__construct
+     */
+    public function testCacheFull()
+    {
+        $cache = array(
+            'files' => array(
+                __DIR__.'/testdir/unknown.txt' => 12345,
+                __DIR__.'/testdir/unkmt.txt' => true,
+            ),
+            'dirs' => array(
+                __DIR__.'/testdir/unkdir' => true,
+            ),
+            'full' => true,
+        );
+        $params = array(
+            'cache' => $cache,
+        );
+        $io = new Native($params);
+        $this->assertFalse($io->isDir(__DIR__.'/testdir'));
+        $this->assertTrue($io->isDir(__DIR__.'/testdir/unkdir'));
+        $this->assertFalse($io->isDir(__DIR__.'/testdir/unkdir2'));
+        $this->assertFalse($io->isDir(__DIR__.'/testdir/unknown.txt'));
+        $this->assertFalse($io->isFile(__DIR__.'/testdir/test.txt'));
+        $this->assertTrue($io->isFile(__DIR__.'/testdir/unknown.txt'));
+        $this->assertTrue($io->isFile(__DIR__.'/testdir/unkmt.txt'));
+        $this->assertFalse($io->isFile(__DIR__.'/testdir/unknown2.txt'));
+        $this->assertEquals(12345, $io->getModificationTime(__DIR__.'/testdir/unknown.txt'));
+        $this->setExpectedException('go\I18n\Exceptions\IOError');
+        $this->assertEquals(12345, $io->getModificationTime(__DIR__.'/testdir/test.txt'));
+    }
 }
