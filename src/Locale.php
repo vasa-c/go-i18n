@@ -13,6 +13,8 @@ namespace go\I18n;
  *                the language for this locale
  * @property-read array $paramsLanguage
  *                the parameters list of language
+ * @property-read \go\I18n\I18n $i18n
+ *                the main i18n object
  */
 class Locale extends Helpers\MagicFields
 {
@@ -24,6 +26,7 @@ class Locale extends Helpers\MagicFields
     protected $magicFields = array(
         'language' => true,
         'paramsLanguage' => true,
+        'i18n' => true,
     );
 
     /**
@@ -75,6 +78,8 @@ class Locale extends Helpers\MagicFields
                 return $this->language;
             case 'paramsLanguage':
                 return $this->context->languages[$this->language];
+            case 'i18n':
+                return $this->context->i18n;
         }
     }
 

@@ -127,6 +127,7 @@ class I18nTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('en', $en->language);
         $this->assertEquals('ru', $ru->language);
         $this->assertSame($ru, $i18n->getLocale('ru'), 'Cache locals');
+        $this->assertSame($i18n, $ru->i18n);
 
         $this->setExpectedException('go\I18n\Exceptions\LanguageNotExists');
         $i18n->getLocale('it');
