@@ -1,0 +1,9 @@
+# English localization
+
+[calendar]
+    months[] : Jan, Feb, Mar, Apr
+    days[] : M, T, W, T, F, S, S
+    ampm[] : AM, PM
+
+[]
+global : value

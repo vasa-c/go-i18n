@@ -15,6 +15,8 @@ namespace go\I18n;
  *
  * @property-read \go\I18n\Locale $current
  *                the current locale
+ * @property-read \go\I18n\UI\INode $ui
+ *                the user interface service
  */
 class I18n extends Helpers\MagicFields
 {
@@ -128,6 +130,7 @@ class I18n extends Helpers\MagicFields
      */
     protected $magicFields = array(
         'current' => true,
+        'ui' => true,
     );
 
     /**
@@ -141,6 +144,8 @@ class I18n extends Helpers\MagicFields
         switch ($key) {
             case 'current':
                 return $this->getCurrentLocale();
+            case 'ui':
+                return $this->context->getUI();
         }
         return $this->getLocale($key);
     }

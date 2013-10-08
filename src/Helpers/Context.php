@@ -56,6 +56,20 @@ class Context
     public $locales = array();
 
     /**
+     * The user interface service
+     *
+     * @var \go\I18n\UI\INode
+     */
+    public $ui;
+
+    /**
+     * The list of UI adapters (created when UI created)
+     *
+     * @var \go\I18n\UI\Adapters
+     */
+    public $adaptersUI;
+
+    /**
      * Constructor
      *
      * @param \go\I18n\I18n $i18n
@@ -103,6 +117,22 @@ class Context
             $this->io = Creator::create($config, $default, $base, 'io');
         }
         return $this->io;
+    }
+
+    /**
+     * Get the user interface service
+     *
+     * @return \go\I18n\UI\INode
+     */
+    public function getUI()
+    {
+        if (!$this->ui) {
+            $config = isset($this->config['ui']) ? $this->config['ui'] : null;
+            $default = 'go\I18n\UI\RootSingleDir';
+            $base = 'go\I18n\UI\INode';
+            $this->ui = Creator::create($config, $default, $base, 'ui', $this);
+        }
+        return $this->ui;
     }
 
     /**

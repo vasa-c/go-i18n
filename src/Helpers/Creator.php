@@ -24,11 +24,13 @@ class Creator
      *        the base class for check
      * @param string $key [optional]
      *        the config key for debug
+     * @param mixed $addarg [optional]
+     *        the additional argument for constructor
      * @return object
      *         the target instance
      * @throws \go\I18n\Exceptions\ConfigInvalid
      */
-    public static function create($params, $default = null, $base = null, $key = null)
+    public static function create($params, $default = null, $base = null, $key = null, $addarg = null)
     {
         if (\is_object($params)) {
             $instance = $params;
@@ -56,7 +58,11 @@ class Creator
             if (!\class_exists($classname)) {
                 throw new ConfigInvalid($key.' is an instance of undefined class');
             }
-            $instance = new $classname($arg);
+            if ($addarg !== null) {
+                $instance = new $classname($arg, $addarg);
+            } else {
+                $instance = new $classname($arg);
+            }
         }
         if (($base) && (!($instance instanceof $base))) {
             throw new ConfigInvalid($key.' must be an instance of '.$base);
