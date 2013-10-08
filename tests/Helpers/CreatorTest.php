@@ -27,7 +27,7 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($params, Creator::create($params, null, $base));
         $paramsStd = (object)array();
         $this->assertSame($paramsStd, Creator::create($paramsStd));
-        $this->setExpectedException('go\I18n\Exceptions\ConfigInvalid');
+        $this->setExpectedException('go\I18n\Exceptions\ConfigService');
         Creator::create($paramsStd, null, $base);
     }
 
@@ -44,7 +44,7 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($params, Creator::create($actual, null, $base));
         $nclassname = 'go\Tests\I18n\Helpers\mocks\MF';
         $this->assertInstanceOf($nclassname, Creator::create($nclassname));
-        $this->setExpectedException('go\I18n\Exceptions\ConfigInvalid');
+        $this->setExpectedException('go\I18n\Exceptions\ConfigService');
         Creator::create($nclassname, null, $base);
     }
 
@@ -56,7 +56,7 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
         $default = 'go\Tests\I18n\Helpers\mocks\Created';
         $this->assertInstanceOf($default, Creator::create(null, $default));
         $this->assertInstanceOf($default, Creator::create(true, $default));
-        $this->setExpectedException('go\I18n\Exceptions\ConfigInvalid');
+        $this->setExpectedException('go\I18n\Exceptions\ConfigService');
         Creator::create(null);
     }
 
@@ -79,7 +79,7 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
         $actual2 = Creator::create($params2, $classname);
         $this->assertInstanceOf($classname, $actual2);
         $this->assertEquals($params2, $actual2->getParams());
-        $this->setExpectedException('go\I18n\Exceptions\ConfigInvalid');
+        $this->setExpectedException('go\I18n\Exceptions\ConfigService');
         Creator::create($params2);
     }
 
@@ -94,7 +94,7 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers go\I18n\Helpers\Creator::create
-     * @expectedException go\I18n\Exceptions\ConfigInvalid
+     * @expectedException go\I18n\Exceptions\ConfigService
      */
     public function testCreateInvalidValue()
     {
@@ -103,7 +103,7 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers go\I18n\Helpers\Creator::create
-     * @expectedException go\I18n\Exceptions\ConfigInvalid
+     * @expectedException go\I18n\Exceptions\ConfigService
      */
     public function testClassNotFound()
     {

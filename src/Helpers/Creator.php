@@ -8,7 +8,7 @@
 
 namespace go\I18n\Helpers;
 
-use go\I18n\Exceptions\ConfigInvalid;
+use go\I18n\Exceptions\ConfigService;
 use go\I18n\Exceptions\ServiceDisabled;
 
 class Creator
@@ -28,7 +28,7 @@ class Creator
      *        the additional argument for constructor
      * @return object
      *         the target instance
-     * @throws \go\I18n\Exceptions\ConfigInvalid
+     * @throws \go\I18n\Exceptions\ConfigService
      */
     public static function create($params, $default = null, $base = null, $key = null, $addarg = null)
     {
@@ -47,16 +47,16 @@ class Creator
             } elseif ($params === false) {
                 throw new ServiceDisabled($key);
             } else {
-                throw new ConfigInvalid($key.': is not valid');
+                throw new ConfigService($key, 'Type is not valid');
             }
             if (!$classname) {
                 if (!$default) {
-                    throw new ConfigInvalid($key.': classname is not specified');
+                    throw new ConfigService($key, 'Classname is not specified');
                 }
                 $classname = $default;
             }
             if (!\class_exists($classname)) {
-                throw new ConfigInvalid($key.' is an instance of undefined class');
+                throw new ConfigService($key, 'Class '.$classname.' is undefined');
             }
             if ($addarg !== null) {
                 $instance = new $classname($arg, $addarg);
@@ -65,7 +65,7 @@ class Creator
             }
         }
         if (($base) && (!($instance instanceof $base))) {
-            throw new ConfigInvalid($key.' must be an instance of '.$base);
+            throw new ConfigService($key, 'Must be an instance of '.$base);
         }
         return $instance;
     }
