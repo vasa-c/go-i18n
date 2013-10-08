@@ -95,4 +95,16 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('en', $by->parent->parent->language);
         $this->assertNull($by->parent->parent->parent);
     }
+
+    /**
+     * @covers go\I18n\Locale::$ui
+     */
+    public function testLocale()
+    {
+        $config = $this->testConfig;
+        $config['ui'] = array();
+        $config['ui']['dirname'] = __DIR__.'/UI/testui';
+        $i18n = new \go\I18n\I18n($config);
+        $this->assertSame($i18n->ui->ru, $i18n->ru->ui);
+    }
 }
