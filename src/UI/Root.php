@@ -10,7 +10,7 @@ abstract class Root extends Base
      * @param array $params
      * @param \go\I18n\Helpers\Context $context
      */
-    public function __construct(array $params, \go\I18n\Helpers\Context $context)
+    public function __construct(\go\I18n\Helpers\Context $context, array $params)
     {
         parent::__construct($context, '', null);
         $this->params = $params;

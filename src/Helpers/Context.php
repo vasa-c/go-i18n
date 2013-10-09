@@ -112,9 +112,12 @@ class Context
     {
         if (!$this->io) {
             $config = isset($this->config['io']) ? $this->config['io'] : null;
-            $default = 'go\I18n\IO\Native';
-            $base = 'go\I18n\IO\IIO';
-            $this->io = Creator::create($config, $default, $base, 'io');
+            $options = array(
+                'default' => 'go\I18n\IO\Native',
+                'base' => 'go\I18n\IO\IIO',
+                'key' => 'io',
+            );
+            $this->io = Creator::create($config, $options);
         }
         return $this->io;
     }
@@ -128,9 +131,13 @@ class Context
     {
         if (!$this->ui) {
             $config = isset($this->config['ui']) ? $this->config['ui'] : null;
-            $default = 'go\I18n\UI\RootSingleDir';
-            $base = 'go\I18n\UI\INode';
-            $this->ui = Creator::create($config, $default, $base, 'ui', $this);
+            $options = array(
+                'default' => 'go\I18n\UI\RootSingleDir',
+                'base' => 'go\I18n\UI\INode',
+                'key' => 'ui',
+                'args' => array($this),
+            );
+            $this->ui = Creator::create($config, $options);
         }
         return $this->ui;
     }

@@ -16,56 +16,61 @@ class Creator
     /**
      * Create a instance by parameters
      *
-     * @param mixed $params
+     * @param mixed $pointer
      *        parameters of instance
-     * @param string $default [optional]
-     *        the default class name
-     * @param string $base [optional]
-     *        the base class for check
-     * @param string $key [optional]
-     *        the config key for debug
-     * @param mixed $addarg [optional]
-     *        the additional argument for constructor
+     * @param array $options [optional]
+     *        "default" - the default class name
+     *        "base" - the base class for check
+     *        "key" - the config key for debug
+     *        "args" - arguments for constructor (precede params)
      * @return object
      *         the target instance
      * @throws \go\I18n\Exceptions\ConfigService
      */
-    public static function create($params, $default = null, $base = null, $key = null, $addarg = null)
+    public static function create($pointer, array $options = array())
     {
-        if (\is_object($params)) {
-            $instance = $params;
+        if (\is_object($pointer)) {
+            $instance = $pointer;
         } else {
-            if (\is_array($params)) {
-                $classname = isset($params['classname']) ? $params['classname'] : null;
-                $arg = $params;
-            } elseif (\is_string($params)) {
-                $classname = $params;
-                $arg = array();
-            } elseif (\is_null($params) || ($params === true)) {
+            if (\is_array($pointer)) {
+                $classname = isset($pointer['classname']) ? $pointer['classname'] : null;
+                $params = $pointer;
+            } elseif (\is_string($pointer)) {
+                $classname = $pointer;
+                $params = array();
+            } elseif (\is_null($pointer) || ($pointer === true)) {
                 $classname = null;
-                $arg = array();
-            } elseif ($params === false) {
+                $params = array();
+            } elseif ($pointer === false) {
+                $key = isset($options['key']) ? $options['key'] : '';
                 throw new ServiceDisabled($key);
             } else {
+                $key = isset($options['key']) ? $options['key'] : '';
                 throw new ConfigService($key, 'Type is not valid');
             }
             if (!$classname) {
-                if (!$default) {
+                if (empty($options['default'])) {
+                    $key = isset($options['key']) ? $options['key'] : '';
                     throw new ConfigService($key, 'Classname is not specified');
                 }
-                $classname = $default;
+                $classname = $options['default'];
             }
             if (!\class_exists($classname)) {
+                $key = isset($options['key']) ? $options['key'] : '';
                 throw new ConfigService($key, 'Class '.$classname.' is undefined');
             }
-            if ($addarg !== null) {
-                $instance = new $classname($arg, $addarg);
+            if (empty($options['args'])) {
+                $instance = new $classname($params);
             } else {
-                $instance = new $classname($arg);
+                $args = $options['args'];
+                $args[] = $params;
+                $class = new \ReflectionClass($classname);
+                $instance = $class->newInstanceArgs($args);
             }
         }
-        if (($base) && (!($instance instanceof $base))) {
-            throw new ConfigService($key, 'Must be an instance of '.$base);
+        if ((!empty($options['base'])) && (!($instance instanceof $options['base']))) {
+            $key = isset($options['key']) ? $options['key'] : '';
+            throw new ConfigService($key, 'Must be an instance of '.$options['base']);
         }
         return $instance;
     }

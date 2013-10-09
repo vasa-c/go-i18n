@@ -24,11 +24,11 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
         $base = 'go\Tests\I18n\Helpers\mocks\ICreated';
         $params = new mocks\Created();
         $this->assertSame($params, Creator::create($params));
-        $this->assertSame($params, Creator::create($params, null, $base));
+        $this->assertSame($params, Creator::create($params, array('base' => $base)));
         $paramsStd = (object)array();
         $this->assertSame($paramsStd, Creator::create($paramsStd));
         $this->setExpectedException('go\I18n\Exceptions\ConfigService');
-        Creator::create($paramsStd, null, $base);
+        Creator::create($paramsStd, array('base' => $base));
     }
 
     /**
@@ -41,11 +41,11 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
         $actual = Creator::create($params);
         $this->assertInstanceOf($params, $actual);
         $this->assertEquals(array(), $actual->getParams());
-        $this->assertInstanceOf($params, Creator::create($actual, null, $base));
+        $this->assertInstanceOf($params, Creator::create($actual, array('base' => $base)));
         $nclassname = 'go\Tests\I18n\Helpers\mocks\MF';
         $this->assertInstanceOf($nclassname, Creator::create($nclassname));
         $this->setExpectedException('go\I18n\Exceptions\ConfigService');
-        Creator::create($nclassname, null, $base);
+        Creator::create($nclassname, array('base' => $base));
     }
 
     /**
@@ -54,8 +54,8 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
     public function testCreateClassnameNull()
     {
         $default = 'go\Tests\I18n\Helpers\mocks\Created';
-        $this->assertInstanceOf($default, Creator::create(null, $default));
-        $this->assertInstanceOf($default, Creator::create(true, $default));
+        $this->assertInstanceOf($default, Creator::create(null, array('default' => $default)));
+        $this->assertInstanceOf($default, Creator::create(true, array('default' => $default)));
         $this->setExpectedException('go\I18n\Exceptions\ConfigService');
         Creator::create(null);
     }
@@ -70,13 +70,13 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
             'classname' => $classname,
             'param' => 'value',
         );
-        $actual1 = Creator::create($params1, null);
+        $actual1 = Creator::create($params1);
         $this->assertInstanceOf($classname, $actual1);
         $this->assertEquals($params1, $actual1->getParams());
         $params2 = array(
             'param' => 'value',
         );
-        $actual2 = Creator::create($params2, $classname);
+        $actual2 = Creator::create($params2, array('default' => $classname));
         $this->assertInstanceOf($classname, $actual2);
         $this->assertEquals($params2, $actual2->getParams());
         $this->setExpectedException('go\I18n\Exceptions\ConfigService');
@@ -89,7 +89,7 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateFalse()
     {
-        Creator::create(false, 'go\Tests\I18n\Helpers\mocks\Created');
+        Creator::create(false, array('default' => 'go\Tests\I18n\Helpers\mocks\Created'));
     }
 
     /**
