@@ -62,4 +62,52 @@ class UITest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('go\I18n\Exceptions\UIKeyNotFound');
         $ui->get('sub.nosub.sub,subsub');
     }
+
+    public function testEmptyLocale()
+    {
+        $config = array(
+            'languages' => array(
+                'en' => true,
+                'it' => 'en',
+                'by' => 'it',
+            ),
+            'default' => 'en',
+            'ui' => array(
+                'dirname' => __DIR__.'/testui',
+            ),
+        );
+        $i18n = new \go\I18n\I18n($config);
+        $this->assertEquals(array('M', 'T', 'W', 'T', 'F', 'S', 'S'), $i18n->ui->by->calendar->days);
+    }
+
+    /**
+     * @expectedException \go\I18n\Exceptions\ConfigInvalid
+     */
+    public function testErrorUIDirname()
+    {
+        $config = array(
+            'languages' => array(
+                'en' => true,
+            ),
+            'default' => 'en',
+        );
+        $i18n = new \go\I18n\I18n($config);
+        return $i18n->ui;
+    }
+
+    /**
+     * @expectedException \go\I18n\Exceptions\ServiceDisabled
+     */
+    public function testErrorUIDisabled()
+    {
+        $config = array(
+            'languages' => array(
+                'en' => true,
+            ),
+            'default' => 'en',
+            'ui' => false,
+        );
+        $i18n = new \go\I18n\I18n($config);
+        return $i18n->ui;
+    }
 }
