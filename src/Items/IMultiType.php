@@ -44,6 +44,15 @@ interface IMultiType extends \ArrayAccess
     public function getMultiItem($cid);
 
     /**
+     * Get the instance of storage
+     *
+     * @return \go\I18n\Items\Storage\IStorage
+     * @throws \go\I18n\Exceptions\ConfigInvalid
+     *         a storage is not defined in the configuration
+     */
+    public function getStorage();
+
+    /**
      * Remove all items of this type
      */
     public function removeAll();

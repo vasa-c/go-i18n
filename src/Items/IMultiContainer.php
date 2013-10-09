@@ -61,6 +61,14 @@ interface IMultiContainer
     public function existsType($path);
 
     /**
+     * Get the instance of storage
+     *
+     * @return \go\I18n\Items\Storage\IStorage
+     *         the instance of storage or NULL if it is not defined in the config
+     */
+    public function getStorage();
+
+    /**
      * Magic get (local, multi subcontainer or multi type)
      *
      * @example $i18n->items->ru // local
