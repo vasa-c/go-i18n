@@ -153,4 +153,46 @@ class NativeTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('go\I18n\Exceptions\IOError');
         $this->assertEquals(12345, $io->getModificationTime(__DIR__.'/testdir/test.txt'));
     }
+
+    /**
+     * @covers go\I18n\IO\Native::__construct
+     */
+    public function testLogger()
+    {
+        $td = __DIR__.'/testdir/';
+        $logs = array();
+        $logger = function ($method, $filename) use (&$logs, $td) {
+            $filename = \substr($filename, \strlen($td));
+            $logs[] = array($method, $filename);
+        };
+        $params = array(
+            'cache' => array(
+                'files' => array(
+                    $td.'unknown.txt' => 12345,
+                ),
+            ),
+            'logger' => $logger,
+        );
+        $io = new Native($params);
+
+        $io->isFile($td.'unknown.txt');
+        $io->isFile($td.'test.txt');
+        $io->isFile($td.'undefined.txt');
+        $io->isDir($td.'unkdir');
+        $io->getModificationTime($td.'test.txt');
+        $io->getContents($td.'test.txt');
+        $io->getContentsByLines($td.'test.txt');
+        $io->execPhpFile($td.'php.test.txt');
+        $expectedLogs = array(
+            array('isFile', 'unknown.txt'),
+            array('isFile', 'test.txt'),
+            array('isFile', 'undefined.txt'),
+            array('isDir', 'unkdir'),
+            array('getModificationTime', 'test.txt'),
+            array('getContents', 'test.txt'),
+            array('getContentsByLines', 'test.txt'),
+            array('execPhpFile', 'php.test.txt'),
+        );
+        $this->assertEquals($expectedLogs, $logs);
+    }
 }

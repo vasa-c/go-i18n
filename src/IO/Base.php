@@ -39,6 +39,9 @@ abstract class Base implements IIO
             );
         }
         $this->cache = $cache;
+        if (isset($params['logger'])) {
+            $this->logger = $params['logger'];
+        }
     }
 
     /**
@@ -49,6 +52,9 @@ abstract class Base implements IIO
      */
     public function isFile($filename)
     {
+        if ($this->logger) {
+            \call_user_func($this->logger, __FUNCTION__, $filename);
+        }
         if (isset($this->cache['files'][$filename])) {
             return true;
         }
@@ -66,6 +72,9 @@ abstract class Base implements IIO
      */
     public function isDir($dirname)
     {
+        if ($this->logger) {
+            \call_user_func($this->logger, __FUNCTION__, $dirname);
+        }
         if (isset($this->cache['dirs'][$dirname])) {
             return true;
         }
@@ -84,6 +93,9 @@ abstract class Base implements IIO
      */
     public function getModificationTime($filename)
     {
+        if ($this->logger) {
+            \call_user_func($this->logger, __FUNCTION__, $filename);
+        }
         if (isset($this->cache['files'][$filename])) {
             $mtime = $this->cache['files'][$filename];
             if (\is_int($mtime)) {
@@ -108,6 +120,9 @@ abstract class Base implements IIO
      */
     public function getContents($filename)
     {
+        if ($this->logger) {
+            \call_user_func($this->logger, __FUNCTION__, $filename);
+        }
         $contents = $this->doGetContents($filename);
         if ($contents === false) {
             throw new IOError($filename, 'Get contents');
@@ -124,6 +139,9 @@ abstract class Base implements IIO
      */
     public function getContentsByLines($filename)
     {
+        if ($this->logger) {
+            \call_user_func($this->logger, __FUNCTION__, $filename);
+        }
         $contents = $this->doGetContentsByLines($filename);
         if ($contents === false) {
             throw new IOError($filename, 'Get contents by lines');
@@ -140,6 +158,9 @@ abstract class Base implements IIO
      */
     public function execPhpFile($filename)
     {
+        if ($this->logger) {
+            \call_user_func($this->logger, __FUNCTION__, $filename);
+        }
         return $this->doExecPhpFile($filename);
     }
 
@@ -212,4 +233,9 @@ abstract class Base implements IIO
      * @var array
      */
     protected $cache;
+
+    /**
+     * @var callable
+     */
+    protected $logger;
 }
