@@ -17,6 +17,9 @@ namespace go\I18n;
  *                the current locale
  * @property-read \go\I18n\UI\INode $ui
  *                the user interface service
+ * @property-read \go\I18n\Items\IMultiContainer
+ *                the items service
+ *
  */
 class I18n extends Helpers\MagicFields
 {
