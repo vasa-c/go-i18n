@@ -99,7 +99,15 @@ class MultiContainerTest extends Base
      */
     public function testGetStorage()
     {
-
+        $items = $this->create();
+        $one = $items->getMultiSubcontainer('one');
+        $two = $one->getMultiSubcontainer('two');
+        $this->assertNull($items->getStorage());
+        $storage = $one->getStorage();
+        $this->assertInstanceOf('go\Tests\I18n\Items\mocks\TStorage', $storage);
+        $this->assertEquals(array(), $storage->getParams());
+        $this->assertSame($storage, $one->getStorage());
+        $this->assertSame($storage, $two->getStorage());
     }
 
     /**

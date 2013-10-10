@@ -151,7 +151,27 @@ class MultiContainer implements IMultiContainer
      */
     public function getStorage()
     {
-
+        if (!$this->storage) {
+            if (isset($this->config['storage'])) {
+                $options = array(
+                    'default' => null,
+                    'base' => 'go\I18n\Items\Storage\IStorage',
+                    'key' => 'Items.'.$this->pkey.'.Storage',
+                );
+                $this->storage = Creator::create($this->config['storage'], $options);
+            } elseif ($this->key) {
+                $parent = \explode('.', $this->key);
+                \array_pop($parent);
+                $items = $this->context->items;
+                if (!empty($parent)) {
+                    $parent = $items->getMultiSubcontainer($parent);
+                } else {
+                    $parent = $items;
+                }
+                $this->storage = $parent->getStorage();
+            }
+        }
+        return $this->storage;
     }
 
     /**
@@ -344,4 +364,9 @@ class MultiContainer implements IMultiContainer
      * @var array
      */
     protected $magics = array();
+
+    /**
+     * @var \go\I18n\Items\Storage\IStorage
+     */
+    protected $storage;
 }
