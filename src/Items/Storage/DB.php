@@ -9,6 +9,7 @@
 namespace go\I18n\Items\Storage;
 
 use go\I18n\Exceptions\ConfigInvalid;
+use go\I18n\Exceptions\StorageReadOnly;
 
 abstract class DB implements IStorage
 {
@@ -20,11 +21,12 @@ abstract class DB implements IStorage
     public function __construct(array $params)
     {
         $this->params = $params;
-        $this->biglen = isset($params['biglen']) ? (int)$params['biglen'] : 255;
         if (!isset($params['table'])) {
             throw new ConfigInvalid('Table is not specified for DB-Storage');
         }
         $this->table = $params['table'];
+        $this->readonly = !empty($params['readonly']);
+        $this->biglen = isset($params['biglen']) ? (int)$params['biglen'] : 255;
         $this->loadCols();
         $this->init();
     }
@@ -147,6 +149,9 @@ abstract class DB implements IStorage
      */
     public function removeItem($type, $cid)
     {
+        if ($this->readonly) {
+            throw new StorageReadOnly();
+        }
         $ctype = $this->cols['type'];
         $ccid = \is_int($cid) ? $this->cols['cid'] : $this->cols['cid_key'];
         $where = array();
@@ -167,6 +172,9 @@ abstract class DB implements IStorage
      */
     public function removeLocalItem($type, $language, $cid)
     {
+        if ($this->readonly) {
+            throw new StorageReadOnly();
+        }
         $ctype = $this->cols['type'];
         $ccid = \is_int($cid) ? $this->cols['cid'] : $this->cols['cid_key'];
         $where = array();
@@ -189,6 +197,9 @@ abstract class DB implements IStorage
      */
     public function removeFields(array $fields, $type, $language, $cid)
     {
+        if ($this->readonly) {
+            throw new StorageReadOnly();
+        }
         $ctype = $this->cols['type'];
         $ccid = \is_int($cid) ? $this->cols['cid'] : $this->cols['cid_key'];
         $where = array();
@@ -209,6 +220,9 @@ abstract class DB implements IStorage
      */
     public function removeType($type)
     {
+        if ($this->readonly) {
+            throw new StorageReadOnly();
+        }
         $ctype = $this->cols['type'];
         if ($ctype) {
             $where = array($ctype => $type);
@@ -228,6 +242,9 @@ abstract class DB implements IStorage
      */
     public function setFields(array $fields, $type, $language, $cid)
     {
+        if ($this->readonly) {
+            throw new StorageReadOnly();
+        }
         $listValues = array();
         $ctype = $this->cols['type'];
         $clang = $this->cols['language'];

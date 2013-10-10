@@ -236,4 +236,14 @@ class DBTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expected, $storage->getQueries());
     }
+
+    public function testReadOnly()
+    {
+        $config = $this->testConfig;
+        $config['readonly'] = true;
+        $storage = $this->create($config);
+        $storage->getFieldsForItem(array('x'), 'tp', 'ru', 1);
+        $this->setExpectedException('go\I18n\Exceptions\StorageReadOnly');
+        $storage->removeType('tp');
+    }
 }
