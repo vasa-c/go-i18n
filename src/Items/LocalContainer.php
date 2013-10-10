@@ -8,6 +8,9 @@
 
 namespace go\I18n\Items;
 
+use go\I18n\Exceptions\ItemsChildNotFound;
+use go\I18n\Exceptions\ReadOnly;
+
 class LocalContainer implements ILocalContainer
 {
     /**
@@ -63,7 +66,11 @@ class LocalContainer implements ILocalContainer
      */
     public function getSubcontainer($path)
     {
-
+        $ppath = \is_array($path) ? \implode('.', $path) : $path;
+        if (!isset($this->containers[$ppath])) {
+            $this->containers[$ppath] = $this->multi->getMultiSubcontainer($path)->getLocal($this->language);
+        }
+        return $this->containers[$ppath];
     }
 
     /**
@@ -75,7 +82,11 @@ class LocalContainer implements ILocalContainer
      */
     public function getType($path)
     {
-
+        $ppath = \is_array($path) ? \implode('.', $path) : $path;
+        if (!isset($this->types[$ppath])) {
+            $this->types[$ppath] = $this->multi->getMultiType($path)->getLocal($this->language);
+        }
+        return $this->types[$ppath];
     }
 
     /**
@@ -86,7 +97,12 @@ class LocalContainer implements ILocalContainer
      */
     public function existsSubcontainer($path)
     {
-
+        try {
+            $this->getSubcontainer($path);
+        } catch (ItemsChildNotFound $e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -97,7 +113,12 @@ class LocalContainer implements ILocalContainer
      */
     public function existsType($path)
     {
-
+        try {
+            $this->getType($path);
+        } catch (ItemsChildNotFound $e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -105,10 +126,15 @@ class LocalContainer implements ILocalContainer
      *
      * @param string $key
      * @return object
+     * @throws \go\I18n\Exceptions\ItemsChildNotFound
      */
     public function __get($key)
     {
-
+        try {
+            return $this->getSubcontainer($key);
+        } catch (ItemsChildNotFound $e) {
+        }
+        return $this->getType($key);
     }
 
     /**
@@ -119,7 +145,30 @@ class LocalContainer implements ILocalContainer
      */
     public function __isset($key)
     {
+        return ($this->existsSubcontainer($key) || $this->existsType($key));
+    }
 
+    /**
+     * Magic set (forbidden)
+     *
+     * @param string $key
+     * @param mixed $value
+     * @throws \go\I18n\Exceptions\ReadOnly
+     */
+    public function __set($key, $value)
+    {
+        throw new ReadOnly('Items container');
+    }
+
+    /**
+     * Magic unset (forbidden)
+     *
+     * @param string $key
+     * @throws \go\I18n\Exceptions\ReadOnly
+     */
+    public function __unset($key)
+    {
+        throw new ReadOnly('Items container');
     }
 
     /**
@@ -136,4 +185,14 @@ class LocalContainer implements ILocalContainer
      * @var string
      */
     protected $language;
+
+    /**
+     * @var array
+     */
+    protected $containers = array();
+
+    /**
+     * @var array
+     */
+    protected $types = array();
 }

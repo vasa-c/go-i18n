@@ -35,7 +35,7 @@ class MultiType implements IMultiType
      */
     public function getKey()
     {
-
+        return $this->key;
     }
 
     /**
@@ -57,7 +57,11 @@ class MultiType implements IMultiType
      */
     public function getLocal($language)
     {
-
+        if (!isset($this->locales[$language])) {
+            $this->context->mustLanguageExists($language);
+            $this->locales[$language] = $this->createLocal($language);
+        }
+        return $this->locales[$language];
     }
 
     /**
@@ -157,6 +161,15 @@ class MultiType implements IMultiType
     }
 
     /**
+     * @param string $language
+     * @return \go\I18n\Items\ILocalType
+     */
+    protected function createLocal($language)
+    {
+        return new LocalType($this->context, $this, $language);
+    }
+
+    /**
      * @var \go\I18n\Helpers\Context
      */
     protected $context;
@@ -175,4 +188,9 @@ class MultiType implements IMultiType
      * @var array
      */
     protected $config;
+
+    /**
+     * @var array
+     */
+    protected $locales = array();
 }

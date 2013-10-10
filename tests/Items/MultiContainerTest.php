@@ -7,56 +7,13 @@
  * @author Grigoriev Oleg aka vasa_c <go.vasac@gmail.com>
  */
 
-namespace go\Tests\I18n;
+namespace go\Tests\I18n\Items;
 
 /**
  * @covers go\I18n\Items\MultiContainer
  */
-class MultiContainerTest extends \PHPUnit_Framework_TestCase
+class MultiContainerTest extends Base
 {
-    /**
-     * @var array
-     */
-    private $testConfig = array(
-        'containers' => array(
-            'one' => array(
-                'containers' => array(
-                    'two' => array(
-                        'types' => array(
-                            'three' => array(
-                                'type' => 'type.three',
-                                'fields' => array(),
-                            ),
-                        ),
-                    ),
-                ),
-                'types' => array(
-                    'four' => array(
-                        'fields' => array(),
-                    ),
-                ),
-            ),
-        ),
-    );
-
-    /**
-     * @param array $itemsConfig [optional]
-     * @return \go\I18n\Items\IMultiContainer
-     */
-    private function create($itemsConfig = null)
-    {
-        $config = array(
-            'languages' => array(
-                'en' => true,
-                'ru' => true,
-            ),
-            'default' => 'en',
-            'items' => $itemsConfig ?: $this->testConfig,
-        );
-        $i18n = new \go\I18n\I18n($config);
-        return $i18n->items;
-    }
-
     /**
      * @covers go\I18n\Items\MultiContainer::existsSubcontainer
      */
