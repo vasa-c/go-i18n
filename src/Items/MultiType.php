@@ -11,6 +11,24 @@ namespace go\I18n\Items;
 class MultiType implements IMultiType
 {
     /**
+     * Constructor
+     *
+     * @param \go\I18n\Helpers\Context $context
+     *        the system context
+     * @param string $key
+     *        the key of this type
+     * @param array $config
+     *        the configuration of this container
+     */
+    public function __construct(\go\I18n\Helpers\Context $context, $key, array $config)
+    {
+        $this->context = $context;
+        $this->key = $key;
+        $this->pkey = $key ? $key.'.' : '';
+        $this->config = $config;
+    }
+
+    /**
      * @override \go\I18n\Items\IMultiType
      *
      * @return string
@@ -137,4 +155,24 @@ class MultiType implements IMultiType
     {
 
     }
+
+    /**
+     * @var \go\I18n\Helpers\Context
+     */
+    protected $context;
+
+    /**
+     * @var string
+     */
+    protected $key;
+
+    /**
+     * @var string
+     */
+    protected $pkey;
+
+    /**
+     * @var array
+     */
+    protected $config;
 }

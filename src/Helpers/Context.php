@@ -70,6 +70,13 @@ class Context
     public $adaptersUI;
 
     /**
+     * The items service
+     *
+     * @var \go\I18n\Items\IMultiContainer
+     */
+    public $items;
+
+    /**
      * Constructor
      *
      * @param \go\I18n\I18n $i18n
@@ -140,6 +147,26 @@ class Context
             $this->ui = Creator::create($config, $options);
         }
         return $this->ui;
+    }
+
+    /**
+     * Get the items service
+     *
+     * @return \go\I18n\Items\IMultiContainer
+     */
+    public function getItems()
+    {
+        if (!$this->items) {
+            $config = isset($this->config['items']) ? $this->config['items'] : null;
+            $options = array(
+                'default' => 'go\I18n\Items\MultiContainer',
+                'base' => 'go\I18n\Items\IMultiContainer',
+                'key' => 'items',
+                'args' => array($this, ''),
+            );
+            $this->items = Creator::create($config, $options);
+        }
+        return $this->items;
     }
 
     /**

@@ -134,6 +134,7 @@ class I18n extends Helpers\MagicFields
     protected $magicFields = array(
         'current' => true,
         'ui' => true,
+        'items' => true,
     );
 
     /**
@@ -149,6 +150,8 @@ class I18n extends Helpers\MagicFields
                 return $this->getCurrentLocale();
             case 'ui':
                 return $this->context->getUI();
+            case 'items':
+                return $this->context->getItems();
         }
         return $this->getLocale($key);
     }

@@ -11,13 +11,27 @@ namespace go\I18n\Items;
 class LocalContainer implements ILocalContainer
 {
     /**
+     * Constructor
+     *
+     * @param \go\I18n\Helpers\Context $context
+     * @param \go\I18n\Items\IMultiContainer $multi
+     * @param string $language
+     */
+    public function __construct(\go\I18n\Helpers\Context $context, \go\I18n\Items\IMultiContainer $multi, $language)
+    {
+        $this->context = $context;
+        $this->multi = $multi;
+        $this->language = $language;
+    }
+
+    /**
      * @override \go\I18n\Items\ILocalContainer
      *
      * @return string
      */
     public function getKey()
     {
-
+        return $this->multi->getKey();
     }
 
     /**
@@ -27,7 +41,7 @@ class LocalContainer implements ILocalContainer
      */
     public function getLanguage()
     {
-
+        return $this->language;
     }
 
     /**
@@ -37,7 +51,7 @@ class LocalContainer implements ILocalContainer
      */
     public function getMulti()
     {
-
+        return $this->multi;
     }
 
     /**
@@ -107,4 +121,19 @@ class LocalContainer implements ILocalContainer
     {
 
     }
+
+    /**
+     * @var \go\I18n\Helpers\Context
+     */
+    protected $context;
+
+    /**
+     * @var \go\I18n\Items\IMultiContainer
+     */
+    protected $multi;
+
+    /**
+     * @var string
+     */
+    protected $language;
 }

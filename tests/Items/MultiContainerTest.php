@@ -66,7 +66,7 @@ class MultiContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($items->existsSubcontainer('one'));
         $this->assertTrue($items->existsSubcontainer('one.two'));
         $this->assertFalse($items->existsSubcontainer('one.two.three'));
-        $this->assertTrue($items->existsSubcontainer('two'));
+        $this->assertFalse($items->existsSubcontainer('two'));
     }
 
     /**
@@ -79,7 +79,7 @@ class MultiContainerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($items->existsType('one.four'));
         $this->assertFalse($items->existsType('one.two.unknown'));
         $this->assertFalse($items->existsType('one.two'));
-        $this->assertFalse($items->existsType('one'));
+        $this->assertFalse($items->existsType('one.s.s'));
     }
 
     /**
