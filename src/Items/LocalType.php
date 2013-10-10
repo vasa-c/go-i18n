@@ -47,11 +47,21 @@ class LocalType implements ILocalType
     /**
      * @override \go\I18n\Items\ILocalType
      *
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @override \go\I18n\Items\ILocalType
+     *
      * @return \go\I18n\Items\IMultiItem
      */
     public function getMulti()
     {
-
+        return $this->multi;
     }
 
     /**

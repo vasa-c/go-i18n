@@ -20,11 +20,18 @@ interface ILocalType extends \ArrayAccess
     public function getKey();
 
     /**
-     * Get name of this type
+     * Get the name of this type
      *
      * @return string
      */
     public function getName();
+
+    /**
+     * Get the language of this localization
+     *
+     * @return string
+     */
+    public function getLanguage();
 
     /**
      * Get the parent multi-type

@@ -8,6 +8,10 @@
 
 namespace go\I18n\Items;
 
+use go\I18n\Helpers\Creator;
+use go\I18n\Exceptions\ConfigInvalid;
+use go\I18n\Exceptions\ReadOnly;
+
 class MultiType implements IMultiType
 {
     /**
@@ -26,6 +30,7 @@ class MultiType implements IMultiType
         $this->key = $key;
         $this->pkey = $key ? $key.'.' : '';
         $this->config = $config;
+        $this->name = isset($config['name']) ? $config['name'] : $key;
     }
 
     /**
@@ -45,7 +50,7 @@ class MultiType implements IMultiType
      */
     public function getName()
     {
-
+        return $this->name;
     }
 
     /**
@@ -67,21 +72,44 @@ class MultiType implements IMultiType
     /**
      * @override \go\I18n\Items\IMultiType
      *
-     * @param int|string $cid
-     * @return \go\I18n\Items\IMultiItem
+     * @return \go\I18n\Items\Storage\IStorage
+     * @throws \go\I18n\Exceptions\ConfigInvalid
      */
-    public function getMultiItem($cid)
+    public function getStorage()
     {
-
+        if (!$this->storage) {
+            if (isset($this->config['storage'])) {
+                $options = array(
+                    'default' => null,
+                    'base' => 'go\I18n\Items\Storage\IStorage',
+                    'key' => 'Items.'.$this->pkey.'.Storage',
+                );
+                $this->storage = Creator::create($this->config['storage'], $options);
+            } else {
+                $parent = \explode('.', $this->key);
+                \array_pop($parent);
+                $items = $this->context->items;
+                if (!empty($parent)) {
+                    $parent = $items->getMultiSubcontainer($parent);
+                } else {
+                    $parent = $items;
+                }
+                $this->storage = $parent->getStorage();
+                if (!$this->storage) {
+                    throw new ConfigInvalid('Storage for '.$this->key.' is not specified');
+                }
+            }
+        }
+        return $this->storage;
     }
 
     /**
      * @override \go\I18n\Items\IMultiType
      *
-     * @return \go\I18n\Items\Storage\IStorage
-     * @throws \go\I18n\Exceptions\ConfigInvalid
+     * @param int|string $cid
+     * @return \go\I18n\Items\IMultiItem
      */
-    public function getStorage()
+    public function getMultiItem($cid)
     {
 
     }
@@ -103,7 +131,7 @@ class MultiType implements IMultiType
      */
     public function __get($key)
     {
-
+        return $this->getLocal($key);
     }
 
     /**
@@ -114,7 +142,30 @@ class MultiType implements IMultiType
      */
     public function __isset($key)
     {
+        return isset($this->context->languages[$key]);
+    }
 
+    /**
+     * Magic set (forbidden)
+     *
+     * @param string $key
+     * @param mixed $value
+     * @throws \go\I18n\Exceptions\ReadOnly
+     */
+    public function __set($key, $value)
+    {
+        throw new ReadOnly('Items type');
+    }
+
+    /**
+     * Magic unset (forbidden)
+     *
+     * @param string $key
+     * @throws \go\I18n\Exceptions\ReadOnly
+     */
+    public function __unset($key)
+    {
+        throw new ReadOnly('Items type');
     }
 
     /**
@@ -125,7 +176,7 @@ class MultiType implements IMultiType
      */
     public function offsetExists($offset)
     {
-
+        return true;
     }
 
     /**
@@ -147,7 +198,7 @@ class MultiType implements IMultiType
      */
     public function offsetSet($offset, $value)
     {
-
+        throw new ReadOnly('Items type');
     }
 
     /**
@@ -185,6 +236,11 @@ class MultiType implements IMultiType
     protected $pkey;
 
     /**
+     * @var string
+     */
+    protected $name;
+
+    /**
      * @var array
      */
     protected $config;
@@ -193,4 +249,9 @@ class MultiType implements IMultiType
      * @var array
      */
     protected $locales = array();
+
+    /**
+     * @var \go\I18n\Items\Storage\IStorage
+     */
+    protected $storage;
 }

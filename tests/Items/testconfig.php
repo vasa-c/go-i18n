@@ -7,7 +7,7 @@ return array(
                 'two' => array(
                     'types' => array(
                         'three' => array(
-                            'type' => 'type.three',
+                            'name' => 'threetype',
                             'fields' => array(),
                             'storage' => array(
                                 'classname' => 'go\Tests\I18n\Items\mocks\TStorage',
@@ -23,6 +23,11 @@ return array(
                 ),
             ),
             'storage' => 'go\Tests\I18n\Items\mocks\TStorage',
+        ),
+    ),
+    'types' => array(
+        'invalid' => array(
+            'fields' => array(),
         ),
     ),
 );
