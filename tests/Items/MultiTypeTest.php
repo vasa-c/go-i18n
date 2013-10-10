@@ -69,11 +69,7 @@ class MultiTypeTest extends Base
         $invalid = $items->getMultiType('invalid');
         $storageThree = $three->getStorage();
         $this->assertInstanceOf('go\I18n\Items\Storage\IStorage', $storageThree);
-        $expectedParams = array(
-            'classname' => 'go\Tests\I18n\Items\mocks\TStorage',
-            'param' => 'value',
-        );
-        $this->assertEquals($expectedParams, $storageThree->getParams());
+        $this->assertEquals('#3', $storageThree->getTestId());
         $this->assertEquals($items->one->getStorage(), $four->getStorage());
         $this->setExpectedException('go\I18n\Exceptions\ConfigInvalid');
         return $invalid->getStorage();

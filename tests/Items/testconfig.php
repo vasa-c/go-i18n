@@ -11,7 +11,8 @@ return array(
                             'fields' => array(),
                             'storage' => array(
                                 'classname' => 'go\Tests\I18n\Items\mocks\TStorage',
-                                'param' => 'value',
+                                'testid' => '#3',
+                                'table' => 'i18n_three',
                             ),
                         ),
                     ),
@@ -22,7 +23,11 @@ return array(
                     'fields' => array(),
                 ),
             ),
-            'storage' => 'go\Tests\I18n\Items\mocks\TStorage',
+            'storage' => array(
+                'classname' => 'go\Tests\I18n\Items\mocks\TStorage',
+                'testid' => '#1',
+                'table' => 'i18n_one',
+            ),
         ),
     ),
     'types' => array(

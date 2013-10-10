@@ -8,94 +8,111 @@
 
 namespace go\Tests\I18n\Items\mocks;
 
-class TStorage implements \go\I18n\Items\Storage\IStorage
+class TStorage extends \go\I18n\Items\Storage\DB
 {
     /**
-     * Constructor
+     * @override \go\I18n\Items\Storage\DB
+     */
+    protected function init()
+    {
+        $this->testid = isset($this->params['testid']) ? $this->params['testid'] : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTestId()
+    {
+        return $this->testid;
+    }
+
+    /**
+     * @return array
+     */
+    public function getQueries()
+    {
+        return $this->queries;
+    }
+
+    /**
+     * @override \go\I18n\Items\Storage\DB
      *
-     * @param array $params
-     */
-    public function __construct(array $params)
-    {
-        $this->params = $params;
-    }
-
-    /**
+     * @param array $cols
+     * @param array $where [optional]
      * @return array
      */
-    public function getParams()
+    protected function select(array $cols, array $where = null)
     {
-        return $this->params;
+        $cols = $this->cols2string($cols);
+        $where = $this->where2string($where);
+        $this->queries[] = 'SELECT '.$cols.' FROM '.$this->table.' WHERE '.$where;
+        return array();
     }
 
     /**
-     * @param array $fields
-     * @param string $type
-     * @param string $language
-     * @param string|int $cid
-     * @return array
+     * @override \go\I18n\Items\Storage\DB
+     *
+     * @param array $values
+     * @param array $cols [optional]
      */
-    public function getFieldsForItem(array $fields, $type, $language, $cid)
+    protected function replace(array $values, array $cols = null)
     {
-
+        if (!\is_array($cols)) {
+            $cols = \array_keys($values);
+        }
+        $cols = $this->cols2string($cols);
+        $values = $this->values2string($values);
+        $this->queries[] = 'REPLACE INTO '.$this->table.' ('.$cols.') VALUES ('.$values.')';
     }
 
     /**
-     * @param array $fields
-     * @param string $type
-     * @param string $language
-     * @param array $cids
-     * @return array
+     * @override \go\I18n\Items\Storage\DB
+     *
+     * @param array $where [optional]
      */
-    public function getFieldsForList(array $fields, $type, $language, array $cids)
+    protected function remove(array $where = null)
     {
+        $this->queries[] = 'DELETE FROM '.$this->table.' WHERE '.$this->where2string($where);
+    }
 
+    private function cols2string($cols)
+    {
+        return \implode(',', $cols);
+    }
+
+    private function values2string($values)
+    {
+        foreach ($values as &$v) {
+            if (\is_null($v)) {
+                $v = 'NULL';
+            }
+        }
+        return \implode(',', $values);
+    }
+
+    private function where2string($where)
+    {
+        if (empty($where)) {
+            return '1';
+        }
+        $p = array();
+        foreach ($where as $k => $v) {
+            if (\is_array($v)) {
+                $p[] = $k.' IN '.\implode(',', $v);
+            } else {
+                $p[] = $k.'='.$v;
+            }
+        }
+        return \implode(' AND ', $p);
     }
 
     /**
-     * @param string $type
-     * @param string|int $cid
-     * @throws \go\I18n\Exceptions\StorageReadOnly
+     * @var mixed
      */
-    public function removeItem($type, $cid)
-    {
-
-    }
-
-    /**
-     * @param string $type
-     * @param string $language
-     * @param string|int $cid
-     * @throws \go\I18n\Exceptions\StorageReadOnly
-     */
-    public function removeLocalItem($type, $language, $cid)
-    {
-
-    }
-
-    /**
-     * @param array $fields
-     * @param string $type
-     * @param string $language
-     * @param int|string $cid
-     * @throws \go\I18n\Exceptions\StorageReadOnly
-     */
-    public function removeFields(array $fields, $type, $language, $cid)
-    {
-
-    }
-
-    /**
-     * @param string $type
-     * @throws \go\I18n\Exceptions\StorageReadOnly
-     */
-    public function removeType($type)
-    {
-
-    }
+    private $testid;
 
     /**
      * @var array
      */
-    private $params;
+    private $queries = array();
 }

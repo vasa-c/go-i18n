@@ -105,7 +105,7 @@ class MultiContainerTest extends Base
         $this->assertNull($items->getStorage());
         $storage = $one->getStorage();
         $this->assertInstanceOf('go\Tests\I18n\Items\mocks\TStorage', $storage);
-        $this->assertEquals(array(), $storage->getParams());
+        $this->assertEquals('#1', $storage->getTestId());
         $this->assertSame($storage, $one->getStorage());
         $this->assertSame($storage, $two->getStorage());
     }

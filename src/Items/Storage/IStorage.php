@@ -79,4 +79,14 @@ interface IStorage
      * @throws \go\I18n\Exceptions\StorageReadOnly
      */
     public function removeType($type);
+
+    /**
+     * Set fields of item
+     *
+     * @param array $fields
+     * @param string $type
+     * @param string $language
+     * @param int|string $cid
+     */
+    public function setFields(array $fields, $type, $language, $cid);
 }
