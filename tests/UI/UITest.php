@@ -81,7 +81,7 @@ class UITest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \go\I18n\Exceptions\ConfigInvalid
+     * @expectedException \go\I18n\Exceptions\ConfigService
      */
     public function testErrorUIDirname()
     {
