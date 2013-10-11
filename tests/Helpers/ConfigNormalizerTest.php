@@ -30,7 +30,7 @@ class ConfigNormalizerTest extends \PHPUnit_Framework_TestCase
                 'url' => 'rus',
             ),
             'it' => true,
-            'jp' => true,
+            'jp' => null,
             'by' => 'ru',
             'ua' => array(
                 'title' => 'Ukranian',
@@ -55,7 +55,7 @@ class ConfigNormalizerTest extends \PHPUnit_Framework_TestCase
             ),
             'jp' => array(
                 'title' => 'jp',
-                'parent' => 'en',
+                'parent' => null,
                 'url' => 'jp',
             ),
             'by' => array(
