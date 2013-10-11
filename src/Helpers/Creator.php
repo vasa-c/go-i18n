@@ -48,7 +48,11 @@ class Creator
                 $key = isset($options['key']) ? $options['key'] : '';
                 throw new ConfigService($key, 'Type is not valid');
             }
-            if (!$classname) {
+            if ($classname) {
+                if ((!empty($options['ns'])) && ($classname[0] !== '\\')) {
+                    $classname = $options['ns'].'\\'.$classname;
+                }
+            } else {
                 if (empty($options['default'])) {
                     $key = isset($options['key']) ? $options['key'] : '';
                     throw new ConfigService($key, 'Classname is not specified');

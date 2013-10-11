@@ -110,4 +110,19 @@ class CreatorTest extends \PHPUnit_Framework_TestCase
         $classname = 'go\Tests\I18n\Helpers\mocks\Undefined';
         Creator::create($classname);
     }
+
+    public function testNS()
+    {
+        $classname = 'Created';
+        $instance = Creator::create($classname, array('ns' => 'go\Tests\I18n\Helpers\mocks'));
+        $this->assertInstanceOf('go\Tests\I18n\Helpers\mocks\Created', $instance);
+
+        $classname = '\go\Tests\I18n\Helpers\mocks\Created';
+        $instance = Creator::create($classname, array('ns' => 'go\Tests\I18n\Helpers\mocks'));
+        $this->assertInstanceOf('go\Tests\I18n\Helpers\mocks\Created', $instance);
+
+        $this->setExpectedException('go\I18n\Exceptions\ConfigService');
+        $classname = 'go\Tests\I18n\Helpers\mocks\Created';
+        return Creator::create($classname, array('ns' => 'go\Tests\I18n\Helpers\mocks'));
+    }
 }
