@@ -27,6 +27,9 @@ abstract class DB implements IStorage
         $this->table = $params['table'];
         $this->readonly = !empty($params['readonly']);
         $this->biglen = isset($params['biglen']) ? (int)$params['biglen'] : 255;
+        if (\function_exists('mb_strlen')) {
+            $this->charset = isset($params['charset']) ? $params['charset'] : 'utf-8';
+        }
         $this->loadCols();
         $this->init();
     }
@@ -264,7 +267,8 @@ abstract class DB implements IStorage
             $values = $dvalues;
             $values[$cfield] = $key;
             if ($cvalueb) {
-                if (\strlen($value) > $this->biglen) {
+                $len = $this->charset ? \mb_strlen($value, $this->charset) : \strlen($value);
+                if ($len > $this->biglen) {
                     $values[$cvalue] = null;
                     $values[$cvalueb] = $value;
                 } else {
@@ -371,4 +375,9 @@ abstract class DB implements IStorage
      * @var string
      */
     protected $biglen;
+
+    /**
+     * @var string
+     */
+    protected $charset;
 }
