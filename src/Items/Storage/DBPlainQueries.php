@@ -12,6 +12,11 @@ namespace go\I18n\Items\Storage;
 abstract class DBPlainQueries extends DB
 {
     /**
+     * @var booblean
+     */
+    protected $multiReplaceAllow = true;
+
+    /**
      * @override \go\I18n\Items\Storage\DB
      *
      * @throws \go\I18n\Exceptions\ConfigInvalid
@@ -125,6 +130,9 @@ abstract class DBPlainQueries extends DB
     {
         if (empty($listValues)) {
             return;
+        }
+        if (!$this->multiReplaceAllow) {
+            return parent::replaceMulti($listValues, $cols);
         }
         $rvalues = array();
         foreach ($listValues as $values) {
