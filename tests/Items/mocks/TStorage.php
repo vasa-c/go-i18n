@@ -70,7 +70,7 @@ class TStorage extends \go\I18n\Items\Storage\DB
      *
      * @param array $where [optional]
      */
-    protected function remove(array $where = null)
+    protected function delete(array $where = null)
     {
         $this->queries[] = 'DELETE FROM '.$this->table.' WHERE '.$this->where2string($where);
     }

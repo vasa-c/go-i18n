@@ -33,6 +33,8 @@ abstract class DB implements IStorage
 
     /**
      * Init storage (for override)
+     *
+     * @throws \go\I18n\Exceptions\ConfigInvalid
      */
     protected function init()
     {
@@ -159,7 +161,7 @@ abstract class DB implements IStorage
             $where[$ctype] = $type;
         }
         $where[$ccid] = $cid;
-        $this->remove($where);
+        $this->delete($where);
     }
 
     /**
@@ -183,7 +185,7 @@ abstract class DB implements IStorage
         }
         $where[$this->cols['language']] = $language;
         $where[$ccid] = $cid;
-        $this->remove($where);
+        $this->delete($where);
     }
 
     /**
@@ -209,7 +211,7 @@ abstract class DB implements IStorage
         $where[$this->cols['language']] = $language;
         $where[$ccid] = $cid;
         $where[$this->cols['field']] = $fields;
-        $this->remove($where);
+        $this->delete($where);
     }
 
     /**
@@ -229,7 +231,7 @@ abstract class DB implements IStorage
         } else {
             $where = null;
         }
-        $this->remove($where);
+        $this->delete($where);
     }
 
     /**
@@ -315,7 +317,7 @@ abstract class DB implements IStorage
      *
      * @param array $where [optional]
      */
-    abstract protected function remove(array $where = null);
+    abstract protected function delete(array $where = null);
 
     private function loadCols()
     {
