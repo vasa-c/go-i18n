@@ -275,7 +275,6 @@ class MultiType implements IMultiType
                 $v = $k;
             }
         }
-        $config['rfields'] = \array_flip($config['fields']);
         $this->config = $config;
     }
 

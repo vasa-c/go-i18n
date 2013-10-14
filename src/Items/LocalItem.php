@@ -25,7 +25,8 @@ class LocalItem implements ILocalItem
         $this->language = $language;
         $this->cid = $cid;
         $mtype = $multi->getMultiType();
-        $this->config = $mtype->getConfig();
+        $config = $mtype->getConfig();
+        $this->cfields = $config['fields'];
         $this->typename = $mtype->getName();
     }
 
@@ -79,7 +80,7 @@ class LocalItem implements ILocalItem
      */
     public function getListFields($fields = true)
     {
-        $cfields = $this->config['fields'];
+        $cfields = $this->cfields;
         if (!\is_array($fields)) {
             $fields = \array_keys($cfields);
         }
@@ -129,7 +130,7 @@ class LocalItem implements ILocalItem
      */
     public function save()
     {
-        $cfields = $this->config['fields'];
+        $cfields = $this->cfields;
         $fields = array();
         foreach ($this->tosave as $k => $v) {
             $fields[$cfields[$k]] = $v;
@@ -186,7 +187,7 @@ class LocalItem implements ILocalItem
      */
     public function __isset($key)
     {
-        return isset($this->config['fields'][$key]);
+        return isset($this->cfields[$key]);
     }
 
     /**
@@ -198,7 +199,7 @@ class LocalItem implements ILocalItem
      */
     public function __set($key, $value)
     {
-        if (!isset($this->config['fields'][$key])) {
+        if (!isset($this->cfields[$key])) {
             throw new ItemsFieldNotExists($key, $this->typename);
         }
         $value = (string)$value;
@@ -293,8 +294,7 @@ class LocalItem implements ILocalItem
     protected function realLoadFields(array $fields, $tocache = true)
     {
         $storage = $this->getStorage();
-        $cfields = $this->config['fields'];
-        $rfields = $this->config['rfields'];
+        $cfields = $this->cfields;
         $sfields = array();
         foreach ($fields as $field) {
             if (!isset($cfields[$field])) {
@@ -332,7 +332,7 @@ class LocalItem implements ILocalItem
     /**
      * @var array
      */
-    protected $config;
+    protected $cfields;
 
     /**
      * @var array
