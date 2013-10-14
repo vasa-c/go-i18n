@@ -119,7 +119,7 @@ interface ILocalItem extends \ArrayAccess
      * @param string $key
      * @throws \go\I18n\Exceptions\ItemsFieldNotExists
      */
-    public function __unset($key, $value);
+    public function __unset($key);
 
     /**
      * Set known values

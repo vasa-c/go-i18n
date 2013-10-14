@@ -13,11 +13,13 @@ class MultiItem implements IMultiItem
     /**
      * Constructor
      *
+     * @param \go\I18n\Helpers\Context $context
      * @param \go\I18n\Items\IMultiType $type
      * @param string|int $cid
      */
-    public function __construct(\go\I18n\Items\IMultiType $type, $cid)
+    public function __construct($context, \go\I18n\Items\IMultiType $type, $cid)
     {
+        $this->context = $context;
         $this->type = $type;
         $this->cid = $cid;
     }
@@ -51,7 +53,11 @@ class MultiItem implements IMultiItem
      */
     public function getLocal($language)
     {
-
+        if (!isset($this->locales[$language])) {
+            $this->context->mustLanguageExists($language);
+            $this->locales[$language] = new LocalItem($this, $language, $this->cid);
+        }
+        return $this->locales[$language];
     }
 
     /**
@@ -59,7 +65,7 @@ class MultiItem implements IMultiItem
      */
     public function remove()
     {
-
+        $this->type->removeItem($this->cid);
     }
 
     /**
@@ -67,7 +73,9 @@ class MultiItem implements IMultiItem
      */
     public function resetCache()
     {
-
+        foreach ($this->locales as $litem) {
+            $litem->resetCache();
+        }
     }
 
     /**
@@ -79,7 +87,7 @@ class MultiItem implements IMultiItem
      */
     public function __get($key)
     {
-
+        return $this->getLocal($key);
     }
 
     /**
@@ -90,7 +98,15 @@ class MultiItem implements IMultiItem
      */
     public function __isset($key)
     {
+        return isset($this->context->languages[$key]);
+    }
 
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return '[I18N:MultiItem:'.$this->type->getName().':'.$this->cid.']';
     }
 
     /**
@@ -102,4 +118,14 @@ class MultiItem implements IMultiItem
      * @var \go\I18n\Items\IMultiType
      */
     protected $type;
+
+    /**
+     * @var \go\I18n\Helpers\Context
+     */
+    protected $context;
+
+    /**
+     * @var array
+     */
+    protected $locales = array();
 }

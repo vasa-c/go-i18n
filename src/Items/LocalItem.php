@@ -11,13 +11,27 @@ namespace go\I18n\Items;
 class LocalItem implements ILocalItem
 {
     /**
+     * Constructor
+     *
+     * @param \go\I18n\Items\MultiItem $multi
+     * @param string $language
+     * @param string|int $cid
+     */
+    public function __construct(\go\I18n\Items\MultiItem $multi, $language, $cid)
+    {
+        $this->multi = $multi;
+        $this->language = $language;
+        $this->cid = $cid;
+    }
+
+    /**
      * @override \go\I18n\Items\ILocalItem
      *
      * @return \go\I18n\Items\IMultiItem
      */
     public function getMulti()
     {
-
+        return $this->multi;
     }
 
     /**
@@ -157,7 +171,7 @@ class LocalItem implements ILocalItem
      * @param string $key
      * @throws \go\I18n\Exceptions\ItemsFieldNotExists
      */
-    public function __unset($key, $value)
+    public function __unset($key)
     {
 
     }
@@ -215,4 +229,19 @@ class LocalItem implements ILocalItem
     {
 
     }
+
+    /**
+     * @var \go\I18n\Items\MultiItem
+     */
+    protected $multi;
+
+    /**
+     * @var string
+     */
+    protected $language;
+
+    /**
+     * @var string|int
+     */
+    protected $cid;
 }

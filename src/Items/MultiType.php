@@ -114,7 +114,7 @@ class MultiType implements IMultiType
     {
         $cid = $this->castCID($cid);
         if (!isset($this->cacheItems[$cid])) {
-            $this->cacheItems[$cid] = new MultiItem($this, $cid);
+            $this->cacheItems[$cid] = new MultiItem($this->context, $this, $cid);
         }
         return $this->cacheItems[$cid];
     }
