@@ -106,6 +106,28 @@ class MultiTypeTest extends Base
     }
 
     /**
+     * @covers go\I18n\Items\MultiType::removeItem
+     */
+    public function testRemoveItem()
+    {
+        $items = $this->create();
+        $type3 = $items->getMultiType('one.two.three');
+        $type4 = $items->getMultiType('one.four');
+        $type3->removeItem(3);
+        $type4->removeItem(3);
+        $storage3 = $type3->getStorage();
+        $storage4 = $type4->getStorage();
+        $expected3 = array(
+            'DELETE FROM i18n_three WHERE type=threetype AND cid=3',
+        );
+        $this->assertEquals($expected3, $storage3->getQueries());
+        $expected4 = array(
+            'DELETE FROM i18n_one WHERE type=one.four AND cid_key=3',
+        );
+        $this->assertEquals($expected4, $storage4->getQueries());
+    }
+
+    /**
      * @covers go\I18n\Items\MultiType::__get
      */
     public function testMagicGet()
@@ -184,6 +206,13 @@ class MultiTypeTest extends Base
      */
     public function testAAUnset()
     {
-
+        $items = $this->create();
+        $type3 = $items->getMultiType('one.two.three');
+        unset($type3[5]);
+        $storage3 = $type3->getStorage();
+        $expected3 = array(
+            'DELETE FROM i18n_three WHERE type=threetype AND cid=5',
+        );
+        $this->assertEquals($expected3, $storage3->getQueries());
     }
 }

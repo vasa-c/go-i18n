@@ -58,6 +58,13 @@ interface IMultiType extends \ArrayAccess
     public function removeAll();
 
     /**
+     * Remove the item by CID
+     *
+     * @param string|int $cid
+     */
+    public function removeItem($cid);
+
+    /**
      * Magic get (local type)
      *
      * @param string $key

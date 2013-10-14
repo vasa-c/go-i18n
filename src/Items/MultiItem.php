@@ -64,6 +64,14 @@ class MultiItem implements IMultiItem
 
     /**
      * @override \go\I18n\Items\IMultiItem
+     */
+    public function resetCache()
+    {
+
+    }
+
+    /**
+     * @override \go\I18n\Items\IMultiItem
      *
      * @param string $key
      * @return \go\I18n\Items\ILocalItem

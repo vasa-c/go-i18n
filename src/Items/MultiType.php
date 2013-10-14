@@ -112,11 +112,7 @@ class MultiType implements IMultiType
      */
     public function getMultiItem($cid)
     {
-        if ($this->cidint) {
-            $cid = (int)$cid;
-        } else {
-            $cid = (string)$cid;
-        }
+        $cid = $this->castCID($cid);
         if (!isset($this->cacheItems[$cid])) {
             $this->cacheItems[$cid] = new MultiItem($this, $cid);
         }
@@ -129,6 +125,23 @@ class MultiType implements IMultiType
     public function removeAll()
     {
         $this->getStorage()->removeType($this->name);
+        foreach ($this->cacheItems as $item) {
+            $item->resetCache();
+        }
+    }
+
+    /**
+     * @override \go\I18n\Items\IMultiType
+     *
+     * @param string|int $cid
+     */
+    public function removeItem($cid)
+    {
+        $cid = $this->castCID($cid);
+        $this->getStorage()->removeItem($this->name, $cid);
+        if (isset($this->cacheItems[$cid])) {
+            $this->cacheItems[$cid]->resetCache();
+        }
     }
 
     /**
@@ -217,7 +230,7 @@ class MultiType implements IMultiType
      */
     public function offsetUnset($offset)
     {
-
+        $this->removeItem($offset);
     }
 
     /**
@@ -227,6 +240,15 @@ class MultiType implements IMultiType
     protected function createLocal($language)
     {
         return new LocalType($this->context, $this, $language);
+    }
+
+    /**
+     * @param string|int $cid
+     * @return string|int
+     */
+    protected function castCID($cid)
+    {
+        return $this->cidint ? (int)$cid : (string)$cid;
     }
 
     /**

@@ -110,6 +110,14 @@ class LocalItem implements ILocalItem
 
     /**
      * @override \go\I18n\Items\ILocalItem
+     */
+    public function resetCache()
+    {
+
+    }
+
+    /**
+     * @override \go\I18n\Items\ILocalItem
      *
      * @param string $key
      * @return string

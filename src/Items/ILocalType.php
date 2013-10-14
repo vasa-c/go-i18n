@@ -75,4 +75,11 @@ interface ILocalType extends \ArrayAccess
      * @throws \go\I18n\Exceptions\ItemsFieldNotExists
      */
     public function fillArray(array $a, $fields, $cidrow = null);
+
+    /**
+     * Remove the item by CID
+     *
+     * @param string|int $cid
+     */
+    public function removeItem($cid);
 }

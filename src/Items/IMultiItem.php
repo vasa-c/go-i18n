@@ -39,6 +39,11 @@ interface IMultiItem
     public function remove();
 
     /**
+     * Reset the fields cache
+     */
+    public function resetCache();
+
+    /**
      * Magic get (local type)
      *
      * @param string $key

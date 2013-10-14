@@ -104,6 +104,16 @@ class LocalType implements ILocalType
     }
 
     /**
+     * @override \go\I18n\Items\ILocalType
+     *
+     * @param string|int $cid
+     */
+    public function removeItem($cid)
+    {
+        
+    }
+
+    /**
      * @override \ArrayAccess
      *
      * @param string $offset

@@ -83,6 +83,11 @@ interface ILocalItem extends \ArrayAccess
     public function clear();
 
     /**
+     * Reset the fields cache
+     */
+    public function resetCache();
+
+    /**
      * Magic get (value of field)
      *
      * @param string $key

@@ -21,6 +21,7 @@ return array(
             'types' => array(
                 'four' => array(
                     'fields' => array(),
+                    'cid_key' => true,
                 ),
             ),
             'storage' => array(
