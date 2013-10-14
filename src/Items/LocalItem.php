@@ -116,7 +116,12 @@ class LocalItem implements ILocalItem
      */
     public function setListFields($fields, $save = true)
     {
-
+        foreach ($fields as $k => $v) {
+            $this->__set($k, $v);
+        }
+        if ($save) {
+            $this->save();
+        }
     }
 
     /**
@@ -124,7 +129,13 @@ class LocalItem implements ILocalItem
      */
     public function save()
     {
-
+        $cfields = $this->config['fields'];
+        $fields = array();
+        foreach ($this->tosave as $k => $v) {
+            $fields[$cfields[$k]] = $v;
+        }
+        $this->getStorage()->setFields($fields, $this->typename, $this->language, $this->cid);
+        $this->tosave = array();
     }
 
     /**
@@ -148,7 +159,8 @@ class LocalItem implements ILocalItem
      */
     public function resetCache()
     {
-
+        $this->fields = array();
+        $this->tosave = array();
     }
 
     /**
@@ -186,7 +198,15 @@ class LocalItem implements ILocalItem
      */
     public function __set($key, $value)
     {
-
+        if (!isset($this->config['fields'][$key])) {
+            throw new ItemsFieldNotExists($key, $this->typename);
+        }
+        $value = (string)$value;
+        if ((isset($this->fields[$key])) && ($this->fields[$key] === $value)) {
+            return;
+        }
+        $this->fields[$key] = $value;
+        $this->tosave[$key] = $value;
     }
 
     /**
@@ -197,7 +217,7 @@ class LocalItem implements ILocalItem
      */
     public function __unset($key)
     {
-
+        $this->set($key, '');
     }
 
     /**
@@ -328,4 +348,9 @@ class LocalItem implements ILocalItem
      * @var string
      */
     protected $typename;
+
+    /**
+     * @var array
+     */
+    protected $tosave = array();
 }

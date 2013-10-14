@@ -114,7 +114,6 @@ class LocalItemTest extends Base
     {
         $mtype = $this->createReal();
         $ltypeRu = $mtype->getLocal('ru');
-
         $item11Ru = $ltypeRu->getItem(11);
 
         $this->assertEmpty($item11Ru->getLoadedFields());
@@ -140,9 +139,51 @@ class LocalItemTest extends Base
         $item11Ru->getListFields(array('title', 'unknown'));
     }
 
+    public function testMagicSet()
+    {
+        $mtype = $this->createReal();
+        $ltypeRu = $mtype->getLocal('ru');
+        $item11Ru = $ltypeRu->getItem(11);
+        $item11Ru->title = 'new title';
+        $this->assertEquals('new title', $item11Ru->title);
+        $item11Ru->resetCache();
+        $this->assertEquals('#11 zagolovok', $item11Ru->title);
+        $item11Ru->title = 'new title';
+        $item11Ru->save();
+        $item11Ru->resetCache();
+        $this->assertEquals('new title', $item11Ru->title);
+    }
+
     public function testSetListFields()
     {
+        $mtype = $this->createReal();
+        $ltypeRu = $mtype->getLocal('ru');
+        $item11Ru = $ltypeRu->getItem(11);
 
+        $newfields = array(
+            'title' => 'new title',
+            'description' => 'new desc',
+        );
+        $item11Ru->setListFields($newfields);
+        $this->assertEquals('new title', $item11Ru->title);
+        $this->assertEquals('#11 text novosti', $item11Ru->fulltext);
+        $expected = array(
+            'title' => 'new title',
+            'fulltext' => '#11 text novosti',
+            'description' => 'new desc',
+        );
+        $this->assertEquals($expected, $item11Ru->getLoadedFields());
+
+        $mtype = $this->createReal();
+        $ltypeRu = $mtype->getLocal('ru');
+        $item11Ru = $ltypeRu->getItem(11);
+        $this->assertEmpty($item11Ru->getLoadedFields());
+        $expected = array(
+            'title' => '#11 zagolovok',
+            'fulltext' => '#11 text novosti',
+            'description' => '',
+        );
+        $this->assertEquals($expected, $item11Ru->getListFields());
     }
 
     public function testRemove()
