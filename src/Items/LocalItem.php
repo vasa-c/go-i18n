@@ -8,6 +8,8 @@
 
 namespace go\I18n\Items;
 
+use go\I18n\Exceptions\ItemsFieldNotExists;
+
 class LocalItem implements ILocalItem
 {
     /**
@@ -22,6 +24,9 @@ class LocalItem implements ILocalItem
         $this->multi = $multi;
         $this->language = $language;
         $this->cid = $cid;
+        $mtype = $multi->getMultiType();
+        $this->config = $mtype->getConfig();
+        $this->typename = $mtype->getName();
     }
 
     /**
@@ -43,7 +48,7 @@ class LocalItem implements ILocalItem
      */
     public function getAnotherLanguage($language)
     {
-
+        return $this->multi->getLocal($language);
     }
 
     /**
@@ -53,7 +58,7 @@ class LocalItem implements ILocalItem
      */
     public function getType()
     {
-
+        return $this->multi->getMultiType()->getLocal($this->language);
     }
 
     /**
@@ -63,18 +68,34 @@ class LocalItem implements ILocalItem
      */
     public function getCID()
     {
-
+        return $this->cid;
     }
 
     /**
      * @override \go\I18n\Items\ILocalItem
      *
-     * @param array $fields
+     * @param array $fields [optional]
      * @return array
      */
-    public function getListFields($fields)
+    public function getListFields($fields = true)
     {
-
+        $cfields = $this->config['fields'];
+        if (!\is_array($fields)) {
+            $fields = \array_keys($cfields);
+        }
+        $result = array();
+        $toload = array();
+        foreach ($fields as $field) {
+            if (isset($this->fields[$field])) {
+                $result[$field] = $this->fields[$field];
+            } else {
+                $toload[] = $field;
+            }
+        }
+        if (!empty($toload)) {
+            $result = \array_merge($result, $this->realLoadFields($toload, true));
+        }
+        return $result;
     }
 
     /**
@@ -84,7 +105,7 @@ class LocalItem implements ILocalItem
      */
     public function getLoadedFields()
     {
-
+        return $this->fields;
     }
 
     /**
@@ -139,7 +160,10 @@ class LocalItem implements ILocalItem
      */
     public function __get($key)
     {
-
+        if (!isset($this->fields[$key])) {
+            $this->realLoadFields(array($key), true);
+        }
+        return $this->fields[$key];
     }
 
     /**
@@ -150,7 +174,7 @@ class LocalItem implements ILocalItem
      */
     public function __isset($key)
     {
-
+        return isset($this->config['fields'][$key]);
     }
 
     /**
@@ -231,6 +255,46 @@ class LocalItem implements ILocalItem
     }
 
     /**
+     * @return \go\I18n\Items\Storage\IStorage
+     */
+    protected function getStorage()
+    {
+        if (!$this->storage) {
+            $this->storage = $this->multi->getMultiType()->getStorage();
+        }
+        return $this->storage;
+    }
+
+    /**
+     * @param array $fields
+     * @param boolean $tocache [optional]
+     * @return array
+     */
+    protected function realLoadFields(array $fields, $tocache = true)
+    {
+        $storage = $this->getStorage();
+        $cfields = $this->config['fields'];
+        $rfields = $this->config['rfields'];
+        $sfields = array();
+        foreach ($fields as $field) {
+            if (!isset($cfields[$field])) {
+                throw new ItemsFieldNotExists($field, $this->typename);
+            }
+            $sfields[] = $cfields[$field];
+        }
+        $res = $storage->getFieldsForItem($sfields, $this->typename, $this->language, $this->cid);
+        $result = array();
+        foreach ($fields as $field) {
+            $rname = $cfields[$field];
+            $result[$field] = isset($res[$rname]) ? $res[$rname] : '';
+        }
+        if ($tocache) {
+            $this->fields = \array_merge($this->fields, $result);
+        }
+        return $result;
+    }
+
+    /**
      * @var \go\I18n\Items\MultiItem
      */
     protected $multi;
@@ -244,4 +308,24 @@ class LocalItem implements ILocalItem
      * @var string|int
      */
     protected $cid;
+
+    /**
+     * @var array
+     */
+    protected $config;
+
+    /**
+     * @var array
+     */
+    protected $fields = array();
+
+    /**
+     * @var \go\I18n\Items\Storage\IStorage
+     */
+    protected $storage;
+
+    /**
+     * @var string
+     */
+    protected $typename;
 }

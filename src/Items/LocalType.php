@@ -73,7 +73,11 @@ class LocalType implements ILocalType
      */
     public function getItem($cid, $fields = null)
     {
-
+        $item = $this->multi->getMultiItem($cid)->getLocal($this->language);
+        if ($fields) {
+            $item->knownValuesSet($fields);
+        }
+        return $item;
     }
 
     /**

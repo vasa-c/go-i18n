@@ -9,6 +9,8 @@
 
 namespace go\I18n\Items\Storage;
 
+use go\I18n\Exceptions\ConfigInvalid;
+
 abstract class DBPlainQueries extends DB
 {
     /**

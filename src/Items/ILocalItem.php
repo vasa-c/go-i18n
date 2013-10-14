@@ -45,10 +45,12 @@ interface ILocalItem extends \ArrayAccess
     /**
      * Get the list of specified fields
      *
-     * @param array $fields
+     * @param array $fields [optional]
+     *        the fields list (all by default)
      * @return array
+     * @throws \go\I18n\Exceptions\ItemsFieldNotExists
      */
-    public function getListFields($fields);
+    public function getListFields($fields = true);
 
     /**
      * Get the list of only fields that loaded

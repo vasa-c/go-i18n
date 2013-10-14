@@ -157,6 +157,7 @@ class MultiContainer implements IMultiContainer
                     'default' => null,
                     'base' => 'go\I18n\Items\Storage\IStorage',
                     'key' => 'Items.'.$this->pkey.'.Storage',
+                    'ns' => 'go\I18n\Items\Storage',
                 );
                 $this->storage = Creator::create($this->config['storage'], $options);
             } elseif ($this->key) {

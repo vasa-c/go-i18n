@@ -29,7 +29,7 @@ class MultiType implements IMultiType
         $this->context = $context;
         $this->key = $key;
         $this->pkey = $key ? $key.'.' : '';
-        $this->config = $config;
+        $this->setConfig($config);
         $this->name = isset($config['name']) ? $config['name'] : $key;
         $this->cidint = empty($config['cid_key']);
     }
@@ -94,6 +94,7 @@ class MultiType implements IMultiType
                     'default' => null,
                     'base' => 'go\I18n\Items\Storage\IStorage',
                     'key' => 'Items.'.$this->pkey.'.Storage',
+                    'ns' => 'go\I18n\Items\Storage',
                 );
                 $this->storage = Creator::create($this->config['storage'], $options);
             } else {
@@ -259,6 +260,23 @@ class MultiType implements IMultiType
     protected function castCID($cid)
     {
         return $this->cidint ? (int)$cid : (string)$cid;
+    }
+
+    /**
+     * @param array $config
+     */
+    private function setConfig(array $config)
+    {
+        if ((!isset($config['fields'])) || (!\is_array($config['fields']))) {
+            throw new ConfigInvalid('Fields is not specified for i18n "'.$this->key.'"');
+        }
+        foreach ($config['fields'] as $k => &$v) {
+            if ($v === true) {
+                $v = $k;
+            }
+        }
+        $config['rfields'] = \array_flip($config['fields']);
+        $this->config = $config;
     }
 
     /**

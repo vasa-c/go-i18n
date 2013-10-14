@@ -8,7 +8,11 @@ return array(
                     'types' => array(
                         'three' => array(
                             'name' => 'threetype',
-                            'fields' => array(),
+                            'fields' => array(
+                                'title' => true,
+                                'text' => true,
+                                'description' => 'd',
+                            ),
                             'storage' => array(
                                 'classname' => 'go\Tests\I18n\Items\mocks\TStorage',
                                 'testid' => '#3',
@@ -34,6 +38,22 @@ return array(
     'types' => array(
         'invalid' => array(
             'fields' => array(),
+        ),
+        'real' => array(
+            'name' => 'news',
+            'fields' => array(
+                'title' => true,
+                'fulltext' => 'text',
+                'description' => 'd',
+            ),
+            'storage' => array(
+                'classname' => 'SQLite',
+                'db' => null,
+                'table' => 'items',
+                'cols' => array(
+                    'language' => 'lg',
+                ),
+            ),
         ),
     ),
 );
