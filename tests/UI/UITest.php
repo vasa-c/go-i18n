@@ -114,7 +114,7 @@ class UITest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \go\I18n\UI\Base::getAsArray
      */
-/*
+    /*
     public function testAsArray()
     {
         $config = array(
@@ -154,5 +154,5 @@ class UITest extends \PHPUnit_Framework_TestCase
         $actual = $i18n->getLocale('by')->ui->getAsArray();
         $this->assertEquals($expected, $actual);
     }
- */
+    */
 }

@@ -11,13 +11,25 @@ namespace go\I18n\Items;
 class MultiItem implements IMultiItem
 {
     /**
+     * Constructor
+     *
+     * @param \go\I18n\Items\IMultiType $type
+     * @param string|int $cid
+     */
+    public function __construct(\go\I18n\Items\IMultiType $type, $cid)
+    {
+        $this->type = $type;
+        $this->cid = $cid;
+    }
+
+    /**
      * @override \go\I18n\Items\IMultiItem
      *
      * @return \go\I18n\Items\IMultiType
      */
     public function getMultiType()
     {
-
+        return $this->type;
     }
 
     /**
@@ -27,7 +39,7 @@ class MultiItem implements IMultiItem
      */
     public function getCID()
     {
-
+        return $this->cid;
     }
 
     /**
@@ -70,6 +82,16 @@ class MultiItem implements IMultiItem
      */
     public function __isset($key)
     {
-        
+
     }
+
+    /**
+     * @var string|int
+     */
+    protected $cid;
+
+    /**
+     * @var \go\I18n\Items\IMultiType
+     */
+    protected $type;
 }

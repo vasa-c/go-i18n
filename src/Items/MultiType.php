@@ -31,6 +31,7 @@ class MultiType implements IMultiType
         $this->pkey = $key ? $key.'.' : '';
         $this->config = $config;
         $this->name = isset($config['name']) ? $config['name'] : $key;
+        $this->cidint = empty($config['cid_key']);
     }
 
     /**
@@ -111,7 +112,15 @@ class MultiType implements IMultiType
      */
     public function getMultiItem($cid)
     {
-
+        if ($this->cidint) {
+            $cid = (int)$cid;
+        } else {
+            $cid = (string)$cid;
+        }
+        if (!isset($this->cacheItems[$cid])) {
+            $this->cacheItems[$cid] = new MultiItem($this, $cid);
+        }
+        return $this->cacheItems[$cid];
     }
 
     /**
@@ -119,7 +128,7 @@ class MultiType implements IMultiType
      */
     public function removeAll()
     {
-
+        $this->getStorage()->removeType($this->name);
     }
 
     /**
@@ -187,7 +196,7 @@ class MultiType implements IMultiType
      */
     public function offsetGet($offset)
     {
-
+        return $this->getMultiItem($offset);
     }
 
     /**
@@ -254,4 +263,14 @@ class MultiType implements IMultiType
      * @var \go\I18n\Items\Storage\IStorage
      */
     protected $storage;
+
+    /**
+     * @var array
+     */
+    protected $cacheItems = array();
+
+    /**
+     * @var boolean
+     */
+    protected $cidint;
 }

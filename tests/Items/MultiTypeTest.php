@@ -80,7 +80,14 @@ class MultiTypeTest extends Base
      */
     public function testGetMultiItem()
     {
-
+        $items = $this->create();
+        $type = $items->getMultiType('one.two.three');
+        $item3 = $type->getMultiItem(3);
+        $this->assertInstanceOf('go\I18n\Items\IMultiItem', $item3);
+        $this->assertSame($item3, $type->getMultiItem(3));
+        $this->assertNotSame($item3, $type->getMultiItem(4));
+        $this->assertSame($type, $item3->getMultiType());
+        $this->assertSame(3, $item3->getCID());
     }
 
     /**
@@ -88,7 +95,14 @@ class MultiTypeTest extends Base
      */
     public function testRemoveAll()
     {
-
+        $items = $this->create();
+        $type = $items->getMultiType('one.two.three');
+        $type->removeAll();
+        $storage = $type->getStorage();
+        $expected = array(
+            'DELETE FROM i18n_three WHERE type=threetype',
+        );
+        $this->assertEquals($expected, $storage->getQueries());
     }
 
     /**
@@ -139,7 +153,9 @@ class MultiTypeTest extends Base
      */
     public function testAAGet()
     {
-
+        $items = $this->create();
+        $type = $items->getMultiType('one.two.three');
+        $this->assertSame($type->getMultiItem(3), $type[3]);
     }
 
     /**
