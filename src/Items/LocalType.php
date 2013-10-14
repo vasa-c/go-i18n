@@ -109,6 +109,14 @@ class LocalType implements ILocalType
 
     /**
      * @override \go\I18n\Items\ILocalType
+     */
+    public function removeAll()
+    {
+        $this->multi->removeAll();
+    }
+
+    /**
+     * @override \go\I18n\Items\ILocalType
      *
      * @param string|int $cid
      */

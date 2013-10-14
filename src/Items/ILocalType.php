@@ -77,6 +77,11 @@ interface ILocalType extends \ArrayAccess
     public function fillArray(array $a, $fields, $cidrow = null);
 
     /**
+     * Remove all items of this type
+     */
+    public function removeAll();
+
+    /**
      * Remove the item by CID
      *
      * @param string|int $cid
