@@ -41,7 +41,7 @@ class LocalType implements ILocalType
      */
     public function getName()
     {
-
+        return $this->multi->getName();
     }
 
     /**
@@ -110,7 +110,7 @@ class LocalType implements ILocalType
      */
     public function removeItem($cid)
     {
-        
+
     }
 
     /**
