@@ -27,6 +27,13 @@ interface IMultiType extends \ArrayAccess
     public function getName();
 
     /**
+     * Get the config of this type
+     *
+     * @return array
+     */
+    public function getConfig();
+
+    /**
      * Get the locale for this type
      *
      * @param string $language

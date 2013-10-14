@@ -43,6 +43,20 @@ class MultiTypeTest extends Base
     }
 
     /**
+     * @covers go\I18n\Items\MultiType::getConfig
+     */
+    public function testGetConfig()
+    {
+        $items = $this->create();
+        $four = $items->getMultiType('one.four');
+        $expected = array(
+            'fields' => array(),
+            'cid_key' => true,
+        );
+        $this->assertEquals($expected, $four->getConfig());
+    }
+
+    /**
      * @covers go\I18n\Items\MultiType::getLocal
      */
     public function testGetLocal()

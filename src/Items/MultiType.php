@@ -57,6 +57,16 @@ class MultiType implements IMultiType
     /**
      * @override \go\I18n\Items\IMultiType
      *
+     * @return array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @override \go\I18n\Items\IMultiType
+     *
      * @param string $language
      * @return \go\I18n\Items\ILocalType
      * @throws \go\I18n\Exceptions\LanguageNotExists
