@@ -239,7 +239,7 @@ class LocalItem implements ILocalItem
      */
     public function offsetExists($offset)
     {
-
+        return $this->__isset($offset);
     }
 
     /**
@@ -250,7 +250,7 @@ class LocalItem implements ILocalItem
      */
     public function offsetGet($offset)
     {
-
+        return $this->__get($offset);
     }
 
     /**
@@ -261,7 +261,7 @@ class LocalItem implements ILocalItem
      */
     public function offsetSet($offset, $value)
     {
-
+        return $this->__set($offset, $value);
     }
 
     /**
@@ -271,7 +271,7 @@ class LocalItem implements ILocalItem
      */
     public function offsetUnset($offset)
     {
-
+        return $this->__unset($offset);
     }
 
     /**

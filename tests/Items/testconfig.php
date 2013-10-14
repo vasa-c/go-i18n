@@ -53,6 +53,7 @@ return array(
                 'cols' => array(
                     'language' => 'lg',
                 ),
+                //'logger' => function ($sql) {echo 'SQL: '.$sql.\PHP_EOL;}
             ),
         ),
     ),
