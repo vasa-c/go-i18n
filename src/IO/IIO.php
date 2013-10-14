@@ -61,4 +61,17 @@ interface IIO
      * @throws \go\I18n\Exceptions\IOError
      */
     public function execPhpFile($filename);
+
+    /**
+     * Get the contents of a directory
+     *
+     * @param string $dirname
+     *        the directory name
+     * @param boolean $recursive [optional]
+     *        recursive search
+     * @param boolean $mtime [optional]
+     *        get the modification time of a file
+     * @return array
+     */
+    public function getDirectoryContents($dirname, $recursive = false, $mtime = false);
 }

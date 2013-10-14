@@ -165,6 +165,26 @@ abstract class Base implements IIO
     }
 
     /**
+     * @overrie \go\I18n\IO\IIO
+     *
+     * @param string $dirname
+     * @param boolean $recursive [optional]
+     * @param boolean $mtime [optional]
+     * @return array
+     */
+    public function getDirectoryContents($dirname, $recursive = false, $mtime = false)
+    {
+        if ($this->logger) {
+            \call_user_func($this->logger, __FUNCTION__, $filename);
+        }
+        $contents = $this->doGetDirectoryContents($dirname, $recursive, $mtime);
+        if ($contents === false) {
+            throw new IOError($dirname, 'Get directory contents');
+        }
+        return $contents;
+    }
+
+    /**
      * @param \go\I18n\IO\IIO $io [optional]
      * @return \go\I18n\IO\IIO
      */
@@ -223,6 +243,14 @@ abstract class Base implements IIO
      * @retrun mixed
      */
     abstract protected function doExecPhpFile($filename);
+
+    /**
+     * @param string $dirname
+     * @param boolean $recursive [optional]
+     * @param boolean $mtime [optional]
+     * @return array
+     */
+    abstract protected function doGetDirectoryContents($dirname, $recursive, $mtime);
 
     /**
      * @var array

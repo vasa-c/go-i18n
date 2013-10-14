@@ -195,4 +195,111 @@ class NativeTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expectedLogs, $logs);
     }
+
+    /**
+     * @covers go\I18n\IO\Native::getDirectoryContents
+     */
+    public function testGetDirectoryContents()
+    {
+        $dirname = __DIR__.'/testdir';
+        $io = new Native();
+        $expected = array(
+            'files' => array(
+                $dirname.'/php.test.txt' => true,
+                $dirname.'/test.txt' => true,
+            ),
+            'dirs' => array(
+                $dirname.'/indir' => true,
+            ),
+        );
+        $this->assertEquals($expected, $io->getDirectoryContents($dirname));
+    }
+
+    /**
+     * @covers go\I18n\IO\Native::getDirectoryContents
+     */
+    public function testGetDirectoryContentsRecursive()
+    {
+        $dirname = __DIR__.'/testdir';
+        $io = new Native();
+        $expected = array(
+            'files' => array(
+                $dirname.'/php.test.txt' => true,
+                $dirname.'/test.txt' => true,
+                $dirname.'/indir/1.txt' => true,
+                $dirname.'/indir/2.txt' => true,
+            ),
+            'dirs' => array(
+                $dirname.'/indir' => true,
+            ),
+        );
+        $this->assertEquals($expected, $io->getDirectoryContents($dirname, true));
+    }
+
+    /**
+     * @covers go\I18n\IO\Native::getDirectoryContents
+     */
+    public function testGetDirectoryContentsMtime()
+    {
+        $io = new Native();
+        $dirname = __DIR__.'/testdir/indir';
+        $expected = array(
+            'files' => array(
+                $dirname.'/1.txt' => \filemtime($dirname.'/1.txt'),
+                $dirname.'/2.txt' => \filemtime($dirname.'/2.txt'),
+            ),
+            'dirs' => array(
+            ),
+        );
+        $this->assertEquals($expected, $io->getDirectoryContents($dirname, true, true));
+    }
+
+    /**
+     * @covers go\I18n\IO\Native::getDirectoryContents
+     */
+    public function testGetDirectoryContentsCache()
+    {
+        $params = array(
+            'cache' => array(
+                'files' => array(
+                    __DIR__.'/testdir/one.txt' => 123,
+                    __DIR__.'/testdir/two.txt' => 456,
+                    __DIR__.'/testdir/indir/1.txt' => 'true',
+                    __DIR__.'/testdir/indir/2.txt' => 547,
+                    __DIR__.'/oth/1.txt' => true,
+                ),
+                'dirs' => array(
+                    __DIR__.'/testdir/indir' => true,
+                    __DIR__.'/testdir/indir/in2dir' => true,
+                    __DIR__.'/oth' => true,
+                    __DIR__.'/oth/indir' => true,
+                ),
+                'full' => true,
+            ),
+        );
+        $io = new Native($params);
+        $expectedR = array(
+            'files' => array(
+                __DIR__.'/testdir/one.txt' => 123,
+                __DIR__.'/testdir/two.txt' => 456,
+                __DIR__.'/testdir/indir/1.txt' => \filemtime(__DIR__.'/testdir/indir/1.txt'),
+                __DIR__.'/testdir/indir/2.txt' => 547,
+            ),
+            'dirs' => array(
+                __DIR__.'/testdir/indir' => true,
+                __DIR__.'/testdir/indir/in2dir' => true,
+            ),
+        );
+        $this->assertEquals($expectedR, $io->getDirectoryContents(__DIR__.'/testdir', true, true));
+        $expectedP = array(
+            'files' => array(
+                __DIR__.'/testdir/one.txt' => 123,
+                __DIR__.'/testdir/two.txt' => 456,
+            ),
+            'dirs' => array(
+                __DIR__.'/testdir/indir' => true,
+            ),
+        );
+        $this->assertEquals($expectedP, $io->getDirectoryContents(__DIR__.'/testdir', false, true));
+    }
 }
