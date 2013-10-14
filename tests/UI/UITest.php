@@ -110,4 +110,49 @@ class UITest extends \PHPUnit_Framework_TestCase
         $i18n = new \go\I18n\I18n($config);
         return $i18n->ui;
     }
+
+    /**
+     * @covers \go\I18n\UI\Base::getAsArray
+     */
+/*
+    public function testAsArray()
+    {
+        $config = array(
+            'languages' => array(
+                'en' => true,
+                'ru' => 'en',
+                'by' => 'ru',
+            ),
+            'default' => 'en',
+            'ui' => array(
+                'dirname' => __DIR__.'/testui',
+            ),
+        );
+        $i18n = new \go\I18n\I18n($config);
+        $expected = array(
+            'calendar' => array(
+                'months' => array('Янв', 'Фев', 'Мар', 'Апр'),
+                'days' => array('M', 'T', 'W', 'T', 'F', 'S', 'S'),
+                'ampm' => array('раніцы', 'вечара'),
+            ),
+            'pages' => array(
+                'one' => '1',
+                'two' => 'Вторая',
+                'three' => 'Третья',
+                'four' => 'The fourth page',
+            ),
+            'sub' => array(
+                'sub' => array(
+                    'sub' => 'subsub : Суп',
+                ),
+            ),
+            'ruphp' => array(
+                'name' => 'Похапе',
+            ),
+            'global' => 'value',
+        );
+        $actual = $i18n->getLocale('by')->ui->getAsArray();
+        $this->assertEquals($expected, $actual);
+    }
+ */
 }
