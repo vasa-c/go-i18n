@@ -8,6 +8,7 @@
 
 namespace go\I18n\Items;
 
+use go\I18n\Helpers\ItemsFields;
 use go\I18n\Exceptions\ReadOnly;
 
 class LocalType implements ILocalType
@@ -96,29 +97,24 @@ class LocalType implements ILocalType
         foreach ($cids as $cid) {
             $result[$cid] = $this->getItem($cid);
         }
-        if (\is_array($fields)) {
-            $toloadCids = array();
-            $toloadFields = array();
-            $fields = \array_flip($fields);
-            foreach ($result as $cid => $item) {
-                $loaded = $item->getLoadedFields();
-                $diff = \array_diff_key($fields, array_intersect_key($loaded, $fields));
-                if (!empty($diff)) {
-                    $toloadCids[] = $cid;
-                    $toloadFields = \array_merge($toloadFields, $diff);
-                }
-            }
-            if (!empty($toloadFields)) {
-                $config = $this->multi->getConfig();
-                $config = $config['fields'];
-                $lfields = array();
-                foreach (\array_keys($toloadFields) as $fname) {
-                    $lfields[] = $config[$fname];
-                }
-                $storage = $this->multi->getStorage();
-                $list = $storage->getFieldsForList($lfields, $this->multi->getName(), $this->language, $toloadCids);
-
-            }
+        if (!\is_array($fields)) {
+            return $result;
+        }
+        $config = $this->multi->getConfig();
+        $iloaded = array();
+        foreach ($result as $cid => $item) {
+            $iloaded[$cid] = $item->getLoadedFields();
+        }
+        $forload = ItemsFields::createListForLoad($iloaded, $fields, $config);
+        if (empty($forload['cids'])) {
+            return $result;
+        }
+        $storage = $this->multi->getStorage();
+        $name = $this->multi->getName();
+        $req = $storage->getFieldsForList($forload['fields'], $name, $this->language, $forload['cids']);
+        $knowns = ItemsFields::createLoadedList($req, $forload['cids'], $fields, $config);
+        foreach ($knowns as $cid => $known) {
+            $result[$cid]->knownValuesSet($known);
         }
         return $result;
     }

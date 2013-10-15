@@ -42,7 +42,6 @@ class LocalTypeTest extends Base
      */
     public function sqllog($sql)
     {
-echo 'SQL: '.$sql.\PHP_EOL;
         $this->sqllogs[] = $sql;
     }
 
@@ -122,15 +121,42 @@ echo 'SQL: '.$sql.\PHP_EOL;
         );
         $this->assertEquals($expected, $list);
         $expectedLoaded = array(
-            'title' => 't 11',
+            'title' => '',
             'fulltext' => '#11 text novosti',
         );
         $this->assertEquals($expectedLoaded, $item11->getLoadedFields());
+        $sql = 'SELECT "cid","field","value","value_big" FROM "items"';
+        $sql .= ' WHERE "type"=\'news\' AND "lg"=\'ru\' AND "cid" IN (\'11\') AND "field"=\'text\'';
         $expectedSql = array(
-            'SELECT "cid","value","value"',
+            $sql,
         );
-        $this->assertEmpty($this->sqllogs, $expectedSql);
+        $this->assertEquals($this->sqllogs, $expectedSql);
         $this->sqllogs = array();
+
+        $list = $ltype->getListItems(array(10, 11), array('title', 'fulltext'));
+        $expected = array(
+            10 => $item10,
+            11 => $item11,
+        );
+        $this->assertEquals($expected, $list);
+        $this->assertEmpty($this->sqllogs);
+
+        $list = $ltype->getListItems(array(10, 11, 12), array('title', 'fulltext'));
+        $expected = array(
+            10 => $item10,
+            11 => $item11,
+            12 => $item12,
+        );
+        $this->assertEquals($expected, $list);
+        $sql = 'SELECT "cid","field","value","value_big" FROM "items"';
+        $sql .= ' WHERE "type"=\'news\' AND "lg"=\'ru\' AND "cid" IN (\'12\') AND "field" IN (\'title\',\'text\')';
+        $expectedSql = array(
+            $sql,
+        );
+        $this->assertEquals($this->sqllogs, $expectedSql);
+
+        $this->setExpectedException('go\I18n\Exceptions\ItemsFieldNotExists');
+        $ltype->getListItems(array(10, 11, 12), array('title', 'fulltext', 'unknown'));
     }
 
     /**

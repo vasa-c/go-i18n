@@ -33,6 +33,9 @@ class ItemsFields
             if (!empty($lfields)) {
                 $cids[] = $cid;
                 foreach ($lfields as $lfield => $v) {
+                    if (!isset($cfields[$lfield])) {
+                        throw new \go\I18n\Exceptions\ItemsFieldNotExists($lfield);
+                    }
                     $load[$cfields[$lfield]] = true;
                 }
             }
