@@ -112,9 +112,8 @@ class UITest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \go\I18n\UI\Base::getAsArray
+     * @covers \go\I18n\UI\Base::asArray
      */
-    /*
     public function testAsArray()
     {
         $config = array(
@@ -129,6 +128,21 @@ class UITest extends \PHPUnit_Framework_TestCase
             ),
         );
         $i18n = new \go\I18n\I18n($config);
+
+        $expected = array(
+            'months' => array('Янв', 'Фев', 'Мар', 'Апр'),
+            'days' => array('M', 'T', 'W', 'T', 'F', 'S', 'S'),
+            'ampm' => array('раніцы', 'вечара'),
+        );
+        $actual = $i18n->getLocale('by')->ui->get('calendar')->asArray();
+        $this->assertEquals($expected, $actual);
+
+        $expected = array(
+            'name' => 'Похапе',
+        );
+        $actual = $i18n->getLocale('by')->ui->get('ruphp')->asArray();
+        $this->assertEquals($expected, $actual);
+
         $expected = array(
             'calendar' => array(
                 'months' => array('Янв', 'Фев', 'Мар', 'Апр'),
@@ -138,12 +152,14 @@ class UITest extends \PHPUnit_Framework_TestCase
             'pages' => array(
                 'one' => '1',
                 'two' => 'Вторая',
-                'three' => 'Третья',
-                'four' => 'The fourth page',
+                'three' => "Третья\n",
+                'four' => "The fourth page\n",
             ),
             'sub' => array(
                 'sub' => array(
-                    'sub' => 'subsub : Суп',
+                    'sub' => array(
+                        'subsub' => 'Суп',
+                    ),
                 ),
             ),
             'ruphp' => array(
@@ -151,8 +167,27 @@ class UITest extends \PHPUnit_Framework_TestCase
             ),
             'global' => 'value',
         );
-        $actual = $i18n->getLocale('by')->ui->getAsArray();
+        $actual = $i18n->getLocale('by')->ui->asArray();
         $this->assertEquals($expected, $actual);
     }
-    */
+
+    public function testEmptySelf()
+    {
+        $config = array(
+            'languages' => array(
+                'en' => true,
+                'ru' => 'en',
+                'by' => 'ru',
+            ),
+            'default' => 'en',
+            'ui' => array(
+                'dirname' => __DIR__.'/testui',
+            ),
+        );
+        $i18n = new \go\I18n\I18n($config);
+        $calendar = $i18n->ru->ui->calendar;
+        $this->assertTrue($calendar->exists(''));
+        $this->assertSame($calendar, $calendar->get(''));
+        $this->assertSame($calendar, $calendar->get(array()));
+    }
 }

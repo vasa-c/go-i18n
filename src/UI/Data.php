@@ -17,4 +17,14 @@ class Data extends Single
         parent::__construct($context, $key, $language);
         $this->data = $data;
     }
+
+    /**
+     * @override \go\I18n\UI\Base
+     *
+     * @return array
+     */
+    protected function localAsArray()
+    {
+        return $this->data;
+    }
 }

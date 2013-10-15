@@ -132,6 +132,34 @@ class Adapters
     }
 
     /**
+     * Get the list keys from the dir
+     *
+     * @param string $dirname
+     * @param \go\I18n\Helpers\Context $context
+     * @return array
+     */
+    public function getKeysFromDir($dirname, $context)
+    {
+        $dir = $context->getIO()->getDirectoryContents($dirname, false, false);
+        $keys = array();
+        foreach ($dir['files'] as $filename => $v) {
+            $filename = \pathinfo($filename);
+            $key = $filename['filename'];
+            $ext = $filename['extension'];
+            if (isset($this->adapters['files'][$ext])) {
+                $keys[$key] = true;
+            }
+        }
+        if (!empty($this->adapters['dir'])) {
+            foreach ($dir['dirs'] as $dn => $v) {
+                $dn = \pathinfo($dn);
+                $keys[$dn['basename']] = true;
+            }
+        }
+        return \array_keys($keys);
+    }
+
+    /**
      * @var \go\I18n\Helpers\Context
      */
     private $context;

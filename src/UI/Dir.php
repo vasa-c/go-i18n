@@ -36,6 +36,25 @@ class Dir extends Base
     }
 
     /**
+     * @override \go\I18n\UI\Base
+     *
+     * @return array
+     */
+    protected function localAsArray()
+    {
+        $result = array();
+        $keys = $this->context->adaptersUI->getKeysFromDir($this->dirname, $this->context);
+        foreach ($keys as $key) {
+            $child = $this->__get($key);
+            if ($child instanceof IAmArray) {
+                $child = $child->localAsArray();
+            }
+            $result[$key] = $child;
+        }
+        return $result;
+    }
+
+    /**
      * @var string
      */
     private $dirname;

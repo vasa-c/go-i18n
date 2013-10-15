@@ -51,6 +51,9 @@ abstract class Base implements INode
      */
     public function get($path)
     {
+        if (empty($path)) {
+            return $this;
+        }
         if (!\is_array($path)) {
             $path = \explode('.', $path);
         }
@@ -75,6 +78,9 @@ abstract class Base implements INode
      */
     public function exists($path)
     {
+        if (empty($path)) {
+            return true;
+        }
         if (!\is_array($path)) {
             $path = \explode('.', $path);
         }
@@ -204,6 +210,38 @@ abstract class Base implements INode
     }
 
     /**
+     * @override \go\I18n\UI\IAmArray
+     *
+     * @return array
+     */
+    public function asArray()
+    {
+        $data = $this->localAsArray();
+        $parent = $this->getParentUI();
+        if ($parent) {
+            if ($parent->exists($this->key)) {
+                $parent = $parent->get($this->key);
+            } else {
+                $parent = null;
+            }
+            if ($parent instanceof IAmArray) {
+                $parent = $parent->asArray();
+            }
+            if (\is_array($parent)) {
+                $data = \array_replace_recursive($parent, $data);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Get only local data (without request to the parent)
+     *
+     * @return array
+     */
+    abstract protected function localAsArray();
+
+    /**
      * Try load a node by the key
      *
      * @param string $key
@@ -222,10 +260,26 @@ abstract class Base implements INode
      */
     protected function loadFromParent($key)
     {
-        if (!$this->parent) {
-            if ($this->parent === false) {
-                return false;
-            }
+        $parent = $this->getParentUI();
+        if (!$parent) {
+            return null;
+        }
+        $path = \explode('.', $this->pkey.$key);
+        if (!$parent->exists($path)) {
+            return false;
+        }
+        $this->childs[$key] = $parent->get($path);
+        return true;
+    }
+
+    /**
+     * Get the parent UI object
+     *
+     * @return \go\I18n\UI\INode
+     */
+    protected function getParentUI()
+    {
+        if ($this->parent === null) {
             $lang = $this->context->languages[$this->language]['parent'];
             if (!$lang) {
                 $this->parent = false;
@@ -233,12 +287,7 @@ abstract class Base implements INode
             }
             $this->parent = $this->context->ui->__get($lang);
         }
-        $path = \explode('.', $this->pkey.$key);
-        if (!$this->parent->exists($path)) {
-            return false;
-        }
-        $this->childs[$key] = $this->parent->get($path);
-        return true;
+        return $this->parent;
     }
 
     /**

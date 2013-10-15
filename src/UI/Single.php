@@ -49,6 +49,22 @@ abstract class Single extends Base
     }
 
     /**
+     * @override \go\I18n\UI\Base
+     *
+     * @return array
+     */
+    protected function localAsArray()
+    {
+        if ($this->data === null) {
+            $this->data = $this->loadData();
+        }
+        if ($this->data === false) {
+            return array();
+        }
+        return $this->data;
+    }
+
+    /**
      * @var array
      */
     protected $data;

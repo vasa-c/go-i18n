@@ -20,4 +20,14 @@ class EmptyData extends Base
     {
         return false;
     }
+
+    /**
+     * @override \go\I18n\UI\Base
+     *
+     * @return array
+     */
+    protected function localAsArray()
+    {
+        return array();
+    }
 }

@@ -41,6 +41,21 @@ abstract class File extends Single
     }
 
     /**
+     * @override \go\I18n\UI\Base
+     *
+     * @return array
+     */
+    protected function localAsArray()
+    {
+        $data = parent::localAsArray();
+        if ($this->inline) {
+            $inline = $this->inline->localAsArray();
+            $data = \array_replace_recursive($inline, $data);
+        }
+        return $data;
+    }
+
+    /**
      * @var string
      */
     protected $filename;

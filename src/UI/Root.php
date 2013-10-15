@@ -65,6 +65,30 @@ abstract class Root extends Base
     abstract protected function createLocaleUI($language);
 
     /**
+     * @override \go\I18n\UI\Base
+     *
+     * @return array
+     */
+    public function asArray()
+    {
+        $data = array();
+        foreach ($this->context->languages as $key => $v) {
+            $data[$key] = $this->__get($key)->localAsArray();
+        }
+        return $data;
+    }
+
+    /**
+     * @override \go\I18n\UI\Base
+     *
+     * @return array
+     */
+    protected function localAsArray()
+    {
+        throw new \LogicException('localAsArray() is not defined for Root-UI');
+    }
+
+    /**
      * @var array
      */
     protected $params;

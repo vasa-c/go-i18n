@@ -8,7 +8,7 @@
 
 namespace go\I18n\UI;
 
-interface INode extends \ArrayAccess
+interface INode extends IAmArray, \ArrayAccess
 {
     /**
      * Get a key of the node
