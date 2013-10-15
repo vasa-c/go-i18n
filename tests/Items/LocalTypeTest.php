@@ -15,6 +15,38 @@ namespace go\Tests\I18n\Items;
 class LocalTypeTest extends Base
 {
     /**
+     * @var array
+     */
+    private $sqllogs = array();
+
+    /**
+     * @return \go\I18n\Items\IMultiType
+     */
+    private function createReal()
+    {
+        if (!\extension_loaded('sqlite3')) {
+            $this->markTestSkipped('The php-extension sqlite3 is not loaded');
+        }
+        $db = new \SQLite3(':memory:');
+        $dump = \file_get_contents(__DIR__.'/Storage/sqlite-install.sql');
+        $db->query($dump);
+        $config = $this->getTestConfig();
+        $config['types']['real']['storage']['db'] = $db;
+        $config['types']['real']['storage']['logger'] = array($this, 'sqllog');
+        $items = $this->create($config);
+        return $items->getMultiType('real');
+    }
+
+    /**
+     * @param string $sql
+     */
+    public function sqllog($sql)
+    {
+echo 'SQL: '.$sql.\PHP_EOL;
+        $this->sqllogs[] = $sql;
+    }
+
+    /**
      * @covers go\I18n\Items\LocalType::getKey
      * @covers go\I18n\Items\LocalType::getName
      * @covers go\I18n\Items\LocalType::getLanguage
@@ -54,7 +86,51 @@ class LocalTypeTest extends Base
      */
     public function testGetListItems()
     {
+        $mtype = $this->createReal();
+        $ltype = $mtype->getLocal('ru');
 
+        $item10 = $ltype->getItem(10);
+        $item11 = $ltype->getItem(11);
+
+        $list = $ltype->getListItems(array(10, 12, 11));
+        $this->assertTrue(isset($list[12]));
+        $item12 = $list[12];
+        $this->assertInstanceOf('go\I18n\Items\ILocalItem', $item12);
+        $expected = array(
+            10 => $item10,
+            11 => $item11,
+            12 => $item12,
+        );
+        $this->assertEquals($expected, $list);
+        $this->assertEmpty($this->sqllogs);
+
+        $item10->knownValuesSet(array('title' => 't 10', 'fulltext' => 'ft 10'));
+        $item11->knownValuesSet(array('title' => 't 11'));
+
+        $list = $ltype->getListItems(array(10, 11), array('title'));
+        $expected = array(
+            10 => $item10,
+            11 => $item11,
+        );
+        $this->assertEquals($expected, $list);
+        $this->assertEmpty($this->sqllogs);
+
+        $list = $ltype->getListItems(array(10, 11), array('title', 'fulltext'));
+        $expected = array(
+            10 => $item10,
+            11 => $item11,
+        );
+        $this->assertEquals($expected, $list);
+        $expectedLoaded = array(
+            'title' => 't 11',
+            'fulltext' => '#11 text novosti',
+        );
+        $this->assertEquals($expectedLoaded, $item11->getLoadedFields());
+        $expectedSql = array(
+            'SELECT "cid","value","value"',
+        );
+        $this->assertEmpty($this->sqllogs, $expectedSql);
+        $this->sqllogs = array();
     }
 
     /**

@@ -85,14 +85,42 @@ class LocalType implements ILocalType
     /**
      * @override \go\I18n\Items\ILocalType
      *
-     * @param array $cid
+     * @param array $cids
      * @param array|true $fields [optional]
      * @return array
      * @throws \go\I18n\Exceptions\ItemsFieldNotExists
      */
-    public function getListItems(array $cid, $fields = null)
+    public function getListItems(array $cids, $fields = null)
     {
+        $result = array();
+        foreach ($cids as $cid) {
+            $result[$cid] = $this->getItem($cid);
+        }
+        if (\is_array($fields)) {
+            $toloadCids = array();
+            $toloadFields = array();
+            $fields = \array_flip($fields);
+            foreach ($result as $cid => $item) {
+                $loaded = $item->getLoadedFields();
+                $diff = \array_diff_key($fields, array_intersect_key($loaded, $fields));
+                if (!empty($diff)) {
+                    $toloadCids[] = $cid;
+                    $toloadFields = \array_merge($toloadFields, $diff);
+                }
+            }
+            if (!empty($toloadFields)) {
+                $config = $this->multi->getConfig();
+                $config = $config['fields'];
+                $lfields = array();
+                foreach (\array_keys($toloadFields) as $fname) {
+                    $lfields[] = $config[$fname];
+                }
+                $storage = $this->multi->getStorage();
+                $list = $storage->getFieldsForList($lfields, $this->multi->getName(), $this->language, $toloadCids);
 
+            }
+        }
+        return $result;
     }
 
     /**

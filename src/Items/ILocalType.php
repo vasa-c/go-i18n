@@ -53,14 +53,14 @@ interface ILocalType extends \ArrayAccess
     /**
      * Get the items list of this type
      *
-     * @param array $cid
+     * @param array $cids
      *        the list of cids
      * @param array|true $fields [optional]
      *        fields for preload (true - all)
      * @return array
      * @throws \go\I18n\Exceptions\ItemsFieldNotExists
      */
-    public function getListItems(array $cid, $fields = null);
+    public function getListItems(array $cids, $fields = null);
 
     /**
      * Fill data array
