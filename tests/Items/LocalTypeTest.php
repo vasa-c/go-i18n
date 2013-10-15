@@ -30,4 +30,46 @@ class LocalTypeTest extends Base
         $this->assertEquals('ru', $ltype->getLanguage());
         $this->assertEquals($mtype, $ltype->getMulti());
     }
+
+    /**
+     * @covers go\I18n\Items\LocalType::getItem
+     */
+    public function testGetItem()
+    {
+        $items = $this->create();
+        $mtype = $items->getMultiType('one.two.three');
+        $ltype = $mtype->getLocal('ru');
+        $item3 = $mtype->getMultiItem(3)->getLocal('ru');
+        $item4 = $ltype->getItem(4);
+        $fields = array(
+            'title' => 'xzccdfg',
+        );
+        $this->assertSame($item4, $mtype->getMultiItem(4)->getLocal('ru'));
+        $this->assertSame($item3, $ltype->getItem(3, $fields));
+        $this->assertEquals($fields, $item3->getLoadedFields());
+    }
+
+    /**
+     * @covers go\I18n\Items\LocalType::getListItems
+     */
+    public function testGetListItems()
+    {
+
+    }
+
+    /**
+     * @covers go\I18n\Items\LocalType::fillArray
+     */
+    public function testFillArray()
+    {
+
+    }
+
+    /**
+     * @covers go\I18n\Items\LocalType::removeItem
+     */
+    public function testRemoveItem()
+    {
+
+    }
 }

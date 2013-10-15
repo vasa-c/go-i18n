@@ -8,6 +8,8 @@
 
 namespace go\I18n\Items;
 
+use go\I18n\Exceptions\ReadOnly;
+
 class LocalType implements ILocalType
 {
     /**
@@ -122,7 +124,7 @@ class LocalType implements ILocalType
      */
     public function removeItem($cid)
     {
-
+        $this->multi->removeItem($cid);
     }
 
     /**
@@ -133,7 +135,7 @@ class LocalType implements ILocalType
      */
     public function offsetExists($offset)
     {
-
+        return true;
     }
 
     /**
@@ -144,7 +146,7 @@ class LocalType implements ILocalType
      */
     public function offsetGet($offset)
     {
-
+        return $this->getItem($offset);
     }
 
     /**
@@ -155,7 +157,7 @@ class LocalType implements ILocalType
      */
     public function offsetSet($offset, $value)
     {
-
+        throw new ReadOnly('Items type');
     }
 
     /**
@@ -165,7 +167,7 @@ class LocalType implements ILocalType
      */
     public function offsetUnset($offset)
     {
-
+        $this->removeItem($offset);
     }
 
     /**
