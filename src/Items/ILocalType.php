@@ -70,11 +70,13 @@ interface ILocalType extends \ArrayAccess
      * @param array|string $fields
      *        a field name or a list of fields
      * @param string $cidrow [optional]
-     *        a field from the original array for join ("id" by default)
+     *        a field from the original array for join (key by default)
+     * @param string $cidrow [optional]
+     *        a field for save result
      * @return array
      * @throws \go\I18n\Exceptions\ItemsFieldNotExists
      */
-    public function fillArray(array $a, $fields, $cidrow = null);
+    public function fillArray(array $a, $fields, $cidrow = null, $resrow = null);
 
     /**
      * Remove all items of this type

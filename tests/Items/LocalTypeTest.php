@@ -164,14 +164,78 @@ class LocalTypeTest extends Base
      */
     public function testFillArray()
     {
+        $mtype = $this->createReal();
+        $ltype = $mtype->getLocal('ru');
 
-    }
+        $items = array(
+            '10' => array(
+                'id' => 11,
+                'tag' => 'qw',
+            ),
+            '11' => array(
+                'id' => 10,
+                'tag' => 'ss',
+            ),
+            '12' => array(
+                'id' => 12,
+                'tag' => 'er',
+            ),
+        );
 
-    /**
-     * @covers go\I18n\Items\LocalType::removeItem
-     */
-    public function testRemoveItem()
-    {
+        $ltype->getListItems(array(11), array('description'));
+        $actual = $ltype->fillArray($items, array('title', 'fulltext'), null, 'f');
+        $expected = array(
+            '10' => array(
+                'id' => 11,
+                'tag' => 'qw',
+                'f' => array(
+                    'title' => '',
+                    'fulltext' => '',
+                ),
+            ),
+            '11' => array(
+                'id' => 10,
+                'tag' => 'ss',
+                'f' => array(
+                    'title' => '#11 zagolovok',
+                    'fulltext' => '#11 text novosti',
+                ),
+            ),
+            '12' => array(
+                'id' => 12,
+                'tag' => 'er',
+                'f' => array(
+                    'title' => '',
+                    'fulltext' => '#12 text novosti',
+                ),
+            ),
+        );
+        $this->assertEquals($expected, $actual);
 
+        $actual = $ltype->fillArray($items, array('title', 'fulltext'), 'id');
+        $expected = array(
+            '10' => array(
+                'id' => 11,
+                'tag' => 'qw',
+                'title' => '#11 zagolovok',
+                'fulltext' => '#11 text novosti'
+            ),
+            '11' => array(
+                'id' => 10,
+                'tag' => 'ss',
+                'title' => '',
+                'fulltext' => '',
+            ),
+            '12' => array(
+                'id' => 12,
+                'tag' => 'er',
+                'title' => '',
+                'fulltext' => '#12 text novosti',
+             ),
+        );
+        $this->assertEquals($expected, $actual);
+
+        $this->setExpectedException('go\I18n\Exceptions\ItemsFieldNotExists');
+        $ltype->fillArray($items, array('unk'), 'id');
     }
 }

@@ -125,12 +125,34 @@ class LocalType implements ILocalType
      * @param array $a
      * @param array|string $fields
      * @param string $cidrow [optional]
+     * @param string $resrow [optional]
      * @return array
      * @throws \go\I18n\Exceptions\ItemsFieldNotExists
      */
-    public function fillArray(array $a, $fields, $cidrow = null)
+    public function fillArray(array $a, $fields, $cidrow = null, $resrow = null)
     {
-
+        if (!\is_array($fields)) {
+            $fields = array($fields);
+        }
+        if ($cidrow) {
+            $cids = array();
+            foreach ($a as $v) {
+                $cids[] = $v[$cidrow];
+            }
+        } else {
+            $cids = \array_keys($a);
+        }
+        $items = $this->getListItems($cids, $fields);
+        foreach ($a as $k => &$v) {
+            $cid = $cidrow ? $v[$cidrow] : $k;
+            $ifields = $items[$cid]->getListFields($fields);
+            if ($resrow) {
+                $v[$resrow] = $ifields;
+            } else {
+                $v = \array_merge($v, $ifields);
+            }
+        }
+        return $a;
     }
 
     /**
