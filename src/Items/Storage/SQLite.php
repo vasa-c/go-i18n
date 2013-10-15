@@ -21,14 +21,15 @@ class SQLite extends DBPlainQueries
      */
     protected function realQuery($sql, $res = false)
     {
+        $db = $this->getDB();
         $res = $res ? \MYSQLI_USE_RESULT : \MYSQLI_STORE_RESULT;
         if ($res) {
-            $result = $this->db->query($sql);
+            $result = $db->query($sql);
         } else {
-            $result = $this->db->exec($sql);
+            $result = $db->exec($sql);
         }
         if ($result === false) {
-            throw new \RuntimeException('SQLite query error: '.$this->db->lastErrorMsg);
+            throw new \RuntimeException('SQLite query error: '.$db->lastErrorMsg);
         }
         return $result;
     }
@@ -74,6 +75,31 @@ class SQLite extends DBPlainQueries
         if ($value === null) {
             return 'NULL';
         }
-        return "'".$this->db->escapeString($value)."'";
+        return "'".$this->getDB()->escapeString($value)."'";
+    }
+
+    /**
+     * @override \go\I18n\Items\Storage\DB
+     *
+     * @param mixed $params
+     * @return mixed
+     * @throws \go\I18n\Exceptions\ConfigInvalid
+     */
+    protected function createDB($params)
+    {
+        if (!isset($params['filename'])) {
+            $message = 'Parameter "filename" is not specified for SQLite storage';
+            throw new \go\I18n\Exceptions\ConfigInvalid($message);
+        }
+        if (isset($params['flags'])) {
+            $flags = $params['flags'];
+        } else {
+            $flags = (SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+        }
+        if (isset($params['encryption_key'])) {
+            return new \SQLite3($params['filename'], $flags, $params['encryption_key']);
+        } else {
+            return new \SQLite3($params['filename'], $flags);
+        }
     }
 }

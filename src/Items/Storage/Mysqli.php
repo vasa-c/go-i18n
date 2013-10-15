@@ -19,10 +19,11 @@ class Mysqli extends DBPlainQueries
      */
     protected function realQuery($sql, $res = false)
     {
+        $db = $this->getDB();
         $res = $res ? \MYSQLI_USE_RESULT : \MYSQLI_STORE_RESULT;
-        $result = $this->db->query($sql, $res);
-        if ($this->db->errno) {
-            throw new \mysqli_sql_exception($this->db->error, $this->db->errno);
+        $result = $db->query($sql, $res);
+        if ($db->errno) {
+            throw new \mysqli_sql_exception($db->error, $db->errno);
         }
         return $result;
     }
@@ -49,6 +50,24 @@ class Mysqli extends DBPlainQueries
         if ($value === null) {
             return 'NULL';
         }
-        return '"'.$this->db->real_escape_string($value).'"';
+        return '"'.$this->getDB()->real_escape_string($value).'"';
+    }
+
+    /**
+     * @override \go\I18n\Items\Storage\DB
+     *
+     * @param mixed $params
+     * @return mixed
+     * @throws \go\I18n\Exceptions\ConfigInvalid
+     */
+    protected function createDB($params)
+    {
+        $constr = array('host', 'username', 'passwd', 'dbname', 'port', 'socket');
+        $args = array();
+        foreach ($constr as $c) {
+            $args[] = isset($params[$c]) ? $params[$c] : null;
+        }
+        $class = new \ReflectionClass('mysqli');
+        return $class->newInstanceArgs($args);
     }
 }

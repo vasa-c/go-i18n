@@ -323,6 +323,41 @@ abstract class DB implements IStorage
      */
     abstract protected function delete(array $where = null);
 
+    /**
+     * Get the database resource
+     *
+     * @return mixed
+     * @throw \go\I18n\Exceptions\ConfigInvalid
+     */
+    protected function getDB()
+    {
+        if ($this->db === null) {
+            if (isset($this->params['db'])) {
+                $this->db = $this->params['db'];
+            } elseif (isset($this->params['db_params'])) {
+                $this->db = $this->createDB($this->params['db_params']);
+            } else {
+                throw new ConfigInvalid('Parameters "db" or "db_params" is not found in storage config');
+            }
+        }
+        return $this->db;
+    }
+
+    /**
+     * Create the db resource (for override)
+     *
+     * @param mixed $params
+     * @return mixed
+     * @throws \go\I18n\Exceptions\ConfigInvalid
+     */
+    protected function createDB($params)
+    {
+        throw new \LogicException('Storage::createDB is not implemented');
+    }
+
+    /**
+     * Load and normalize the columns list
+     */
     private function loadCols()
     {
         $this->cols = $this->defaultCols;
@@ -380,4 +415,9 @@ abstract class DB implements IStorage
      * @var string
      */
     protected $charset;
+
+    /**
+     * @var mixed
+     */
+    protected $db;
 }

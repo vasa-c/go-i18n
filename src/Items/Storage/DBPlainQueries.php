@@ -25,10 +25,6 @@ abstract class DBPlainQueries extends DB
      */
     protected function init()
     {
-        if (!isset($this->params['db'])) {
-            throw new ConfigInvalid('Storage required the field "db"');
-        }
-        $this->db = $this->params['db'];
         if (!empty($this->params['logger'])) {
             $this->logger = $this->params['logger'];
         }
@@ -216,11 +212,6 @@ abstract class DBPlainQueries extends DB
         }
         return $this->realQuery($sql, $res);
     }
-
-    /**
-     * @var object
-     */
-    protected $db;
 
     /**
      * @var callable
