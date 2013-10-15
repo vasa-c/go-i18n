@@ -129,5 +129,5 @@ interface ILocalItem extends \ArrayAccess
      * @param array $fields
      *        name => value
      */
-    public function knownValuesSet($fields);
+    public function knownValuesSet(array $fields);
 }

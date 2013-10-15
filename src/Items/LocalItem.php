@@ -144,7 +144,7 @@ class LocalItem implements ILocalItem
      */
     public function remove()
     {
-
+        $this->multi->remove();
     }
 
     /**
@@ -152,7 +152,8 @@ class LocalItem implements ILocalItem
      */
     public function clear()
     {
-
+        $this->resetCache();
+        $this->getStorage()->removeLocalItem($this->typename, $this->language, $this->cid);
     }
 
     /**
@@ -227,9 +228,9 @@ class LocalItem implements ILocalItem
      * @param array $fields
      *        name => value
      */
-    public function knownValuesSet($fields)
+    public function knownValuesSet(array $fields)
     {
-
+        $this->fields = \array_merge($this->fields, $fields, $this->tosave);
     }
 
     /**

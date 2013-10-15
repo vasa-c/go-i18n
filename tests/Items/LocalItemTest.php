@@ -31,6 +31,9 @@ class LocalItemTest extends Base
         return $items->getMultiType('real');
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::getMulti
+     */
     public function testGetMulti()
     {
         $items = $this->create();
@@ -40,6 +43,9 @@ class LocalItemTest extends Base
         $this->assertSame($mitem, $litem->getMulti());
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::getAnotherLanguage
+     */
     public function testGetAnotherLanguage()
     {
         $items = $this->create();
@@ -52,6 +58,9 @@ class LocalItemTest extends Base
         $this->assertSame($litemRu, $litemEn->getAnotherLanguage('ru'));
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::getType
+     */
     public function testGetType()
     {
         $items = $this->create();
@@ -72,6 +81,9 @@ class LocalItemTest extends Base
         $this->assertSame('3', $litem->getCID());
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::__get
+     */
     public function testMagicGet()
     {
         $mtype = $this->createReal();
@@ -97,6 +109,9 @@ class LocalItemTest extends Base
         return $item11Ru->unknown;
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::__isset
+     */
     public function testMagicIsset()
     {
         $items = $this->create();
@@ -110,6 +125,9 @@ class LocalItemTest extends Base
         $this->assertFalse(isset($litem->unknown));
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::getListFields
+     */
     public function testGetListFields($fields = true)
     {
         $mtype = $this->createReal();
@@ -139,6 +157,9 @@ class LocalItemTest extends Base
         $item11Ru->getListFields(array('title', 'unknown'));
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::__set
+     */
     public function testMagicSet()
     {
         $mtype = $this->createReal();
@@ -154,6 +175,9 @@ class LocalItemTest extends Base
         $this->assertEquals('new title', $item11Ru->title);
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::setListFields
+     */
     public function testSetListFields()
     {
         $mtype = $this->createReal();
@@ -186,18 +210,100 @@ class LocalItemTest extends Base
         $this->assertEquals($expected, $item11Ru->getListFields());
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::remove
+     */
     public function testRemove()
     {
+        $mtype = $this->createReal();
+        $ltypeRu = $mtype->getLocal('ru');
+        $item11Ru = $ltypeRu->getItem(11);
+        $item11En = $mtype->getLocal('en')->getItem(11);
 
+        $config = $mtype->getConfig();
+        $db = $config['storage']['db'];
+        $count = $db->query('SELECT COUNT(1) FROM `items`')->fetchArray(\SQLITE3_NUM);
+        $count = $count[0];
+        $this->assertEquals('#11 zagolovok', $item11Ru->title);
+        $this->assertEquals('#11 news title', $item11En->title);
+        $item11Ru->remove();
+        $this->assertEmpty($item11Ru->title);
+        $this->assertEmpty($item11En->title);
+        $item11Ru->resetCache();
+        $item11En->resetCache();
+        $this->assertEmpty($item11Ru->title);
+        $this->assertEmpty($item11En->title);
+        $count2 = $db->query('SELECT COUNT(1) FROM `items`')->fetchArray(\SQLITE3_NUM);
+        $count2 = $count2[0];
+        $this->assertEquals($count - 3, $count2);
     }
 
+    /**
+     * @covers go\I18n\Items\LocalItem::clear
+     */
     public function testClear()
     {
+        $mtype = $this->createReal();
+        $ltypeRu = $mtype->getLocal('ru');
+        $item11Ru = $ltypeRu->getItem(11);
+        $item11En = $mtype->getLocal('en')->getItem(11);
 
+        $config = $mtype->getConfig();
+        $db = $config['storage']['db'];
+        $count = $db->query('SELECT COUNT(1) FROM `items`')->fetchArray(\SQLITE3_NUM);
+        $count = $count[0];
+        $this->assertEquals('#11 zagolovok', $item11Ru->title);
+        $this->assertEquals('#11 news title', $item11En->title);
+        $item11Ru->clear();
+        $this->assertEmpty($item11Ru->title);
+        $this->assertEquals('#11 news title', $item11En->title);
+        $item11Ru->resetCache();
+        $item11En->resetCache();
+        $this->assertEmpty($item11Ru->title);
+        $this->assertEquals('#11 news title', $item11En->title);
+        $count2 = $db->query('SELECT COUNT(1) FROM `items`')->fetchArray(\SQLITE3_NUM);
+        $count2 = $count2[0];
+        $this->assertEquals($count - 2, $count2);
     }
 
-    public function testAA()
+    /**
+     * @covers go\I18n\Items\LocalItem::knownValuesSet
+     */
+    public function testKnownValuesSet()
     {
+        $mtype = $this->createReal();
+        $ltypeRu = $mtype->getLocal('ru');
+        $item11Ru = $ltypeRu->getItem(11);
 
+        $this->assertEquals('#11 zagolovok', $item11Ru->title);
+        $item11Ru->fulltext = 'new text';
+        $expected = array(
+            'title' => '#11 zagolovok',
+            'fulltext' => 'new text',
+        );
+        $this->assertEquals($expected, $item11Ru->getLoadedFields());
+
+        $known = array(
+            'title' => 'qwe',
+            'fulltext' => 'rty',
+            'description' => 'iop',
+        );
+        $item11Ru->knownValuesSet($known);
+
+        $expected = array(
+            'title' => 'qwe',
+            'fulltext' => 'new text',
+            'description' => 'iop',
+        );
+        $this->assertEquals($expected, $item11Ru->getLoadedFields());
+
+        $item11Ru->save();
+        $item11Ru->resetCache();
+        $expected = array(
+            'title' => '#11 zagolovok',
+            'fulltext' => 'new text',
+            'description' => '',
+        );
+        $this->assertEquals($expected, $item11Ru->getListFields());
     }
 }
