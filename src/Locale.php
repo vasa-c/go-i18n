@@ -19,6 +19,8 @@ namespace go\I18n;
  *                the parent locale or NULL if it is not exists
  * @property-read \go\I18n\UI\INode $ui
  *                the user interface service for this locale
+ * @property-read \go\I18n\Items\ILocalContainer $items
+ *                the items local container
  */
 class Locale extends Helpers\MagicFields
 {
@@ -33,6 +35,7 @@ class Locale extends Helpers\MagicFields
         'i18n' => true,
         'parent' => true,
         'ui' => true,
+        'items' => true,
     );
 
     /**
@@ -91,6 +94,8 @@ class Locale extends Helpers\MagicFields
                 return $parent ? $this->context->i18n->getLocale($parent) : null;
             case 'ui':
                 return $this->context->i18n->ui->__get($this->language);
+            case 'items':
+                return $this->context->getItems()->getLocal($this->language);
         }
     }
 

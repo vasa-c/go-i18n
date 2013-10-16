@@ -99,12 +99,25 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers go\I18n\Locale::$ui
      */
-    public function testLocale()
+    public function testUI()
     {
         $config = $this->testConfig;
         $config['ui'] = array();
         $config['ui']['dirname'] = __DIR__.'/UI/testui';
         $i18n = new \go\I18n\I18n($config);
         $this->assertSame($i18n->ui->ru, $i18n->ru->ui);
+    }
+
+    /**
+     * @covers go\I18n\Locale::$items
+     */
+    public function testItems()
+    {
+        $config = $this->testConfig;
+        $i18n = new \go\I18n\I18n($config);
+        $locale = $i18n->getLocale('ru');
+        $items = $locale->items;
+        $this->assertInstanceOf('go\I18n\Items\ILocalContainer', $items);
+        $this->assertSame($i18n->items->ru, $items);
     }
 }
