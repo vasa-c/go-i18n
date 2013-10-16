@@ -164,4 +164,16 @@ class I18nTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('go\I18n\Exceptions\FieldNotFound');
         return $i18n->jp;
     }
+
+    /**
+     * @covers go\I18n\I18n::setSingleLanguageMode
+     */
+    public function testSetSingleLanguageMode()
+    {
+        $i18n = new I18n($this->testConfig);
+        $i18n->setSingleLanguageMode();
+        $this->assertEquals('en', $i18n->getCurrentLanguage());
+        $this->setExpectedException('go\I18n\Exceptions\CurrentAlreadySpecified');
+        $i18n->setSingleLanguageMode();
+    }
 }

@@ -156,6 +156,16 @@ class I18n extends Helpers\MagicFields
     }
 
     /**
+     * Set single language mode
+     *
+     * @throws \go\I18n\Exceptions\CurrentAlreadySpecified
+     */
+    public function setSingleLanguageMode()
+    {
+        $this->setCurrentLanguage($this->context->default);
+    }
+
+    /**
      * @override \go\I18n\Helpers\MagicFields
      *
      * @var array
