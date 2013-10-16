@@ -1,6 +1,6 @@
 <?php
 /**
- * The interface of i18n->url service
+ * The interface of i18n->urls service
  *
  * Result of resolve:
  * "language" - the determined language version (null - see redirect)
@@ -14,7 +14,7 @@
 
 namespace go\I18n;
 
-interface IUrl
+interface IUrls
 {
     /**
      * Resolve url (determine language version)
