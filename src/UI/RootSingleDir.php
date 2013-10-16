@@ -10,7 +10,7 @@ class RootSingleDir extends Root
     protected function init()
     {
         if (!isset($this->params['dirname'])) {
-            throw new \go\I18n\Exceptions\ConfigService('UI required "dirname"');
+            throw new \go\I18n\Exceptions\ConfigService('UI', 'Required "dirname"');
         }
         $this->dirname = $this->params['dirname'];
     }

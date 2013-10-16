@@ -102,8 +102,9 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
     public function testUI()
     {
         $config = $this->testConfig;
-        $config['ui'] = array();
-        $config['ui']['dirname'] = __DIR__.'/UI/testui';
+        $config['ui'] = array(
+            'dirname' => __DIR__.'/UI/testui',
+        );
         $i18n = new \go\I18n\I18n($config);
         $this->assertSame($i18n->ui->ru, $i18n->ru->ui);
     }
@@ -119,5 +120,95 @@ class LocaleTest extends \PHPUnit_Framework_TestCase
         $items = $locale->items;
         $this->assertInstanceOf('go\I18n\Items\ILocalContainer', $items);
         $this->assertSame($i18n->items->ru, $items);
+    }
+
+    public function testEmptyLocale()
+    {
+        $config = $this->testConfig;
+        $config['ui'] = array(
+            'dirname' => __DIR__.'/UI/testui',
+        );
+        $i18n = new \go\I18n\I18n($config);
+        $i18n->setCurrentLanguage(null);
+        $current = $i18n->getCurrentLocale();
+        $this->assertTrue($i18n->isEmptyLocaleMode());
+        $this->assertSame($current, $i18n->current);
+        $this->assertTrue($current->isCurrent());
+        $this->assertSame($i18n, $current->i18n);
+        $this->assertTrue($current->isEmpty());
+        $ui = $i18n->ui;
+        $i18n->setCurrentLanguage('ru');
+        $this->assertFalse($i18n->isEmptyLocaleMode());
+        $this->assertSame($current, $i18n->current);
+        $this->assertSame($current, $i18n->getCurrentLocale());
+        $this->assertTrue($current->isCurrent());
+        $this->assertFalse($current->isDefault());
+        $this->assertEquals('ru', $current->language);
+        $this->assertSame($i18n, $current->i18n);
+        $this->assertSame($current, $i18n->getLocale('ru'));
+        $this->assertSame($ui->ru, $current->ui);
+        $this->assertFalse($current->isEmpty());
+    }
+
+    /**
+     * @dataProvider providerEmptyLocaleError
+     */
+    public function testEmptyLocaleError($func)
+    {
+        $config = $this->testConfig;
+        $i18n = new \go\I18n\I18n($config);
+        $i18n->setCurrentLanguage(null);
+        $current = $i18n->getCurrentLocale();
+        $this->setExpectedException('go\I18n\Exceptions\LocaleEmptyMode');
+        \call_user_func($func, $i18n, $current);
+    }
+
+    /**
+     * @return array
+     */
+    public function providerEmptyLocaleError()
+    {
+        return array(
+            array(
+                function ($i18n, $locale) {
+                    return $i18n->getLocale('en');
+                }
+            ),
+            array(
+                function ($i18n, $locale) {
+                    return $i18n->setCurrentLanguage(null);
+                }
+            ),
+            array(
+                function ($i18n, $locale) {
+                    return $locale->isDefault();
+                }
+            ),
+            array(
+                function ($i18n, $locale) {
+                    return $locale->language;
+                }
+            ),
+            array(
+                function ($i18n, $locale) {
+                    return $locale->paramsLanguage;
+                }
+            ),
+            array(
+                function ($i18n, $locale) {
+                    return $locale->parent;
+                }
+            ),
+            array(
+                function ($i18n, $locale) {
+                    return $locale->ui;
+                }
+            ),
+            array(
+                function ($i18n, $locale) {
+                    return $locale->items;
+                }
+            ),
+        );
     }
 }

@@ -8,6 +8,8 @@
 
 namespace go\I18n;
 
+use go\I18n\Exceptions\LocaleEmptyMode;
+
 /**
  * @property-read string $language
  *                the language for this locale
@@ -49,7 +51,9 @@ class Locale extends Helpers\MagicFields
      */
     public function __construct(Helpers\Context $context, $language)
     {
-        $context->mustLanguageExists($language);
+        if ($language !== null) {
+            $context->mustLanguageExists($language);
+        }
         $this->context = $context;
         $this->language = $language;
     }
@@ -61,6 +65,7 @@ class Locale extends Helpers\MagicFields
      */
     public function isCurrent()
     {
+        $this->checkEmpty(false);
         return ($this->language === $this->context->current);
     }
 
@@ -71,7 +76,18 @@ class Locale extends Helpers\MagicFields
      */
     public function isDefault()
     {
+        $this->checkEmpty(true);
         return ($this->language === $this->context->default);
+    }
+
+    /**
+     * Check if the locale is empty (empty mode)
+     *
+     * @return boolean
+     */
+    public function isEmpty()
+    {
+        return ($this->language === null);
     }
 
     /**
@@ -82,13 +98,15 @@ class Locale extends Helpers\MagicFields
      */
     protected function magicFieldCreate($key)
     {
+        if ($key === 'i18n') {
+            return $this->context->i18n;
+        }
+        $this->checkEmpty(true);
         switch ($key) {
             case 'language':
                 return $this->language;
             case 'paramsLanguage':
                 return $this->context->languages[$this->language];
-            case 'i18n':
-                return $this->context->i18n;
             case 'parent':
                 $parent = $this->context->languages[$this->language]['parent'];
                 return $parent ? $this->context->i18n->getLocale($parent) : null;
@@ -96,6 +114,21 @@ class Locale extends Helpers\MagicFields
                 return $this->context->i18n->ui->__get($this->language);
             case 'items':
                 return $this->context->getItems()->getLocal($this->language);
+        }
+    }
+
+    /**
+     * @param boolean $throw [optional]
+     * @throws \go\I18n\Exceptions\LocaleEmptyMode
+     */
+    protected function checkEmpty($throw = false)
+    {
+        if ($this->language === null) {
+            if ($this->context->current) {
+                $this->language = $this->context->current;
+            } elseif ($throw) {
+                throw new Exceptions\LocaleEmptyMode();
+            }
         }
     }
 

@@ -85,6 +85,7 @@ class I18n extends Helpers\MagicFields
      * Set the current language
      *
      * @param string $language
+     *        current language (NULL - enable empty mode)
      * @throws \go\I18n\Exceptions\CurrentAlreadySpecified
      */
     public function setCurrentLanguage($language)
@@ -92,8 +93,19 @@ class I18n extends Helpers\MagicFields
         if ($this->context->current) {
             throw new Exceptions\CurrentAlreadySpecified();
         }
-        $this->context->mustLanguageExists($language);
-        $this->context->current = $language;
+        if ($language !== null) {
+            $this->context->mustLanguageExists($language);
+            $this->context->current = $language;
+            if ($this->localeEmpty) {
+                $this->context->locales[$language] = $this->localeEmpty;
+                $this->localeEmpty = null;
+            }
+        } else {
+            if ($this->localeEmpty) {
+                throw new Exceptions\LocaleEmptyMode();
+            }
+            $this->localeEmpty = new Locale($this->context, null);
+        }
     }
 
     /**
@@ -102,9 +114,13 @@ class I18n extends Helpers\MagicFields
      * @param string $language
      * @return \go\I18n\Locale
      * @throws \go\I18n\Exceptions\LanguageNotExists
+     * @throws \go\I18n\Exceptions\CurrentIsEmpty
      */
     public function getLocale($language)
     {
+        if ($this->localeEmpty) {
+            throw new Exceptions\LocaleEmptyMode();
+        }
         $locales = &$this->context->locales;
         if (!isset($locales[$language])) {
             $locales[$language] = new Locale($this->context, $language);
@@ -121,9 +137,22 @@ class I18n extends Helpers\MagicFields
     public function getCurrentLocale()
     {
         if (!$this->context->current) {
+            if ($this->localeEmpty) {
+                return $this->localeEmpty;
+            }
             throw new Exceptions\CurrentNotSpecified();
         }
         return $this->getLocale($this->context->current);
+    }
+
+    /**
+     * Check if i18n is in empty-locale mode
+     *
+     * @return boolean
+     */
+    public function isEmptyLocaleMode()
+    {
+        return !empty($this->localeEmpty);
     }
 
     /**
@@ -173,4 +202,11 @@ class I18n extends Helpers\MagicFields
      * @var \go\I18n\Helpers\Context
      */
     private $context;
+
+    /**
+     * The empty current locale (empty mode)
+     *
+     * @var \go\I18n\Locale
+     */
+    private $localeEmpty;
 }
