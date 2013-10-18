@@ -170,7 +170,33 @@ class Context
     }
 
     /**
+     * Get the urls service
+     *
+     * @return \go\I18n\Urls\IUrls
+     */
+    public function getUrls()
+    {
+        if (!$this->urls) {
+            $config = isset($this->config['urls']) ? $this->config['urls'] : null;
+            $options = array(
+                'default' => 'go\I18n\Urls\Folder',
+                'base' => 'go\I18n\Urls\IUrls',
+                'key' => 'items',
+                'args' => array($this),
+            );
+            $this->urls = Creator::create($config, $options);
+        }
+        return $this->urls;
+    }
+
+    /**
      * @var \go\I18n\IO\IIO
      */
     private $io;
+
+    /**
+     *
+     * @var \go\I18n\Urls\IUrls
+     */
+    private $urls;
 }

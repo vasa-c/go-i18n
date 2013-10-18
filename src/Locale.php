@@ -91,6 +91,25 @@ class Locale extends Helpers\MagicFields
     }
 
     /**
+     * Create the url of resource (for this locale)
+     *
+     * @param string $relUrl
+     *        a relative url (in the current language version)
+     * @param array|string $data [optional]
+     *        data for GET
+     * @param boolean $absolute [optional]
+     *        create an absolute URI
+     * @throws \go\I18n\Exceptions\UrlsNotResolverd
+     */
+    public function url($relUrl, $data = null, $absolute = false)
+    {
+        if (!$this->urls) {
+            $this->urls = $this->context->getUrls();
+        }
+        return $this->urls->url($relUrl, $data, $absolute, $this->language);
+    }
+
+    /**
      * @override \go\I18n\Helpers\MagicFields
      *
      * @param string $key
@@ -141,4 +160,9 @@ class Locale extends Helpers\MagicFields
      * @var string
      */
     private $language;
+
+    /**
+     * @var \go\I18n\Urls\IUrls
+     */
+    private $urls;
 }

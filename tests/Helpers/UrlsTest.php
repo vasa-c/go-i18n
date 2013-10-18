@@ -104,4 +104,31 @@ class UrlsTest extends \PHPUnit_Framework_TestCase
             ),
         );
     }
+
+    /**
+     * @covers go\I18n\Helpers\Urls::defineVersion
+     */
+    public function testDefineVersion()
+    {
+        $config = array(
+            'admin/in/' => true,
+            'admin/' => false,
+            'ajax/' => false,
+        );
+        $this->assertTrue(Urls::defineVersion($config, ''));
+        $this->assertTrue(Urls::defineVersion($config, 'news/view/'));
+        $this->assertTrue(Urls::defineVersion($config, 'admin/in/'));
+        $this->assertTrue(Urls::defineVersion($config, 'admin/in/edit/?x=1'));
+        $this->assertFalse(Urls::defineVersion($config, 'admin/'));
+        $this->assertFalse(Urls::defineVersion($config, 'admin/edit/?x=1'));
+        $this->assertFalse(Urls::defineVersion($config, 'ajax/?x=5'));
+        $config[''] = false;
+        $this->assertFalse(Urls::defineVersion($config, ''));
+        $this->assertFalse(Urls::defineVersion($config, 'news/view/'));
+        $this->assertTrue(Urls::defineVersion($config, 'admin/in/'));
+        $this->assertTrue(Urls::defineVersion($config, 'admin/in/edit/?x=1'));
+        $this->assertFalse(Urls::defineVersion($config, 'admin/'));
+        $this->assertFalse(Urls::defineVersion($config, 'admin/edit/?x=1'));
+        $this->assertFalse(Urls::defineVersion($config, 'ajax/?x=5'));
+    }
 }

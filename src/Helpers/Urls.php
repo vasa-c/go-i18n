@@ -34,4 +34,24 @@ class Urls
         }
         return $urls;
     }
+
+    /**
+     * Search an url in the config and define a version (multi/single)
+     *
+     * @param array $config
+     * @param string $url
+     * @return boolean
+     */
+    public static function defineVersion($config, $url)
+    {
+        foreach ($config as $prefix => $version) {
+            if (empty($prefix)) {
+                return $version;
+            }
+            if (\strpos($url, $prefix) === 0) {
+                return $version;
+            }
+        }
+        return true;
+    }
 }

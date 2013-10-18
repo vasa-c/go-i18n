@@ -17,9 +17,10 @@ namespace go\I18n;
  *                the current locale
  * @property-read \go\I18n\UI\INode $ui
  *                the user interface service
- * @property-read \go\I18n\Items\IMultiContainer
+ * @property-read \go\I18n\Items\IMultiContainer $items
  *                the items service
- *
+ * @property-read \go\I18n\Urls\IUrls $urls
+ *                the urls service
  */
 class I18n extends Helpers\MagicFields
 {
@@ -174,6 +175,7 @@ class I18n extends Helpers\MagicFields
         'current' => true,
         'ui' => true,
         'items' => true,
+        'urls' => true,
     );
 
     /**
@@ -191,6 +193,8 @@ class I18n extends Helpers\MagicFields
                 return $this->context->getUI();
             case 'items':
                 return $this->context->getItems();
+            case 'urls':
+                return $this->context->getUrls();
         }
         return $this->getLocale($key);
     }
