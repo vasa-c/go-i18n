@@ -8,6 +8,8 @@
 
 namespace go\I18n\Helpers;
 
+use go\I18n\Exceptions\FormatFile;
+
 class ParserUI
 {
     /**
@@ -57,7 +59,7 @@ class ParserUI
                 continue;
             }
             if ($first === '[') {
-                if (!\preg_match('~\[([a-z0-9_.-]*)\]~is', $line, $matches)) {
+                if (!\preg_match('~^\[([a-z0-9_.-]*)\]$~is', $line, $matches)) {
                     return self::error($filename, $line);
                 }
                 $section = \trim($matches[1]);
@@ -81,13 +83,17 @@ class ParserUI
                 }
                 $name = \trim($nv[0]);
                 $value = \trim($nv[1]);
-                if (\substr($name, -2) === '[]') {
-                    $name = \substr($name, 0, -2);
+                if (\preg_match('~^(.*?)\[([^\]]*)\]$~s', $name, $matches)) {
+                    $name = $matches[1];
+                    $type = $matches[2];
                     if (empty($value)) {
                         $value = array();
                     } else {
                         $value = \explode(',', $value);
                         $value = \array_map('trim', $value);
+                    }
+                    if (!empty($type)) {
+                        $value['__type'] = $type;
                     }
                 }
                 $current[$name] = $value;
@@ -103,6 +109,6 @@ class ParserUI
      */
     private static function error($filename, $error)
     {
-        throw new \go\I18n\Exceptions\FormatFile('ui', $filename, $error);
+        throw new FormatFile('ui', $filename, $error);
     }
 }

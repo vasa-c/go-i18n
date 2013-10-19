@@ -41,6 +41,13 @@ class ParserUITest extends \PHPUnit_Framework_TestCase
                     ),
                 ),
             ),
+            'dec' => array(
+                'objects' => array(
+                    0 => 'object',
+                    1 => 'objects',
+                    '__type' => 'dec',
+                ),
+            ),
         );
         $this->assertEquals($expected, ParserUI::parseFile($filename));
     }

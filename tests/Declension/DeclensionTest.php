@@ -148,12 +148,10 @@ class DeclensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('two', $declension->decline(2, 'dec.list'));
         $this->assertEquals('two', $declension->decline(3, 'dec.list'));
         $this->assertEquals('three', $declension->decline(5, 'dec.list'));
-        /*
-        $this->assertEquals('first', $declension->decline(1, 'dec.objects'));
-        $this->assertEquals('second', $declension->decline(2, 'dec.objects'));
-        $this->assertEquals('second', $declension->decline(3, 'dec.objects'));
-        $this->assertEquals('third', $declension->decline(5, 'dec.objects'));
-         */
+        $this->assertEquals('object', $declension->decline(1, 'dec.objects'));
+        $this->assertEquals('objecta', $declension->decline(2, 'dec.objects'));
+        $this->assertEquals('objecta', $declension->decline(3, 'dec.objects'));
+        $this->assertEquals('objectov', $declension->decline(5, 'dec.objects'));
     }
 
     public function testLocale()
@@ -179,7 +177,7 @@ class DeclensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('rus10', $i18n->getLocale('ru')->decline(10, array()));
         $this->assertEquals('eng11', $i18n->getLocale('en')->decline(11, array()));
     }
-    /*
+
     public function testUINode()
     {
         $config = array(
@@ -194,7 +192,11 @@ class DeclensionTest extends \PHPUnit_Framework_TestCase
         );
         $i18n = new I18n($config);
         $locale = $i18n->getLocale('ru');
-        $this->assertEquals('third', $locale->ui->dec->objects->decline(5));
+        $objects = $locale->ui->dec->objects;
+        $this->assertInstanceOf('go\I18n\Declension\UINode', $objects);
+        $this->assertEquals('objectov', $objects->decline(5));
+        $this->assertEquals('objecta', $objects[1]);
+        $this->assertNull($objects[10]);
+        $this->assertNull($objects['__type']);
     }
-    */
 }

@@ -166,6 +166,13 @@ class UITest extends \PHPUnit_Framework_TestCase
                 'name' => 'Похапе',
             ),
             'global' => 'value',
+            'dec' => array(
+                'objects' => array(
+                    0 => 'object',
+                    1 => 'objects',
+                    '__type' => 'dec',
+                ),
+            ),
         );
         $actual = $i18n->getLocale('by')->ui->asArray();
         $this->assertEquals($expected, $actual);

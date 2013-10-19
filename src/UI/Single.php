@@ -2,6 +2,8 @@
 
 namespace go\I18n\UI;
 
+use go\I18n\Declension\UINode;
+
 abstract class Single extends Base
 {
     /**
@@ -23,7 +25,9 @@ abstract class Single extends Base
         }
         $value = $this->data[$key];
         if (\is_array($value)) {
-            if (isset($value[0])) {
+            if (isset($value['__type'])) {
+                $this->childs[$key] = new UINode($this->context, $value);
+            } elseif (isset($value[0])) {
                 $this->childs[$key] = $value;
             } else {
                 if (!$this->adapters) {
