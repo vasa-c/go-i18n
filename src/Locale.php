@@ -110,6 +110,21 @@ class Locale extends Helpers\MagicFields
     }
 
     /**
+     * Decline in the number
+     *
+     * @param int $number
+     *        the number of objects
+     * @param string|array $forms
+     *        array - the list of declension forms, string - UI-key
+     * @return string
+     *         required form
+     */
+    public function decline($number, array $forms)
+    {
+        return $this->context->getDeclension()->decline($number, $forms, $this->language);
+    }
+
+    /**
      * @override \go\I18n\Helpers\MagicFields
      *
      * @param string $key

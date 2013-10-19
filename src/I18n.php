@@ -21,6 +21,8 @@ namespace go\I18n;
  *                the items service
  * @property-read \go\I18n\Urls\IUrls $urls
  *                the urls service
+ * @property-read \go\I18n\Declension\IDeclension $declension
+ *                the declension service
  */
 class I18n extends Helpers\MagicFields
 {
@@ -176,6 +178,7 @@ class I18n extends Helpers\MagicFields
         'ui' => true,
         'items' => true,
         'urls' => true,
+        'declension' => true,
     );
 
     /**
@@ -195,6 +198,8 @@ class I18n extends Helpers\MagicFields
                 return $this->context->getItems();
             case 'urls':
                 return $this->context->getUrls();
+            case 'declension':
+                return $this->context->getDeclension();
         }
         return $this->getLocale($key);
     }

@@ -190,13 +190,38 @@ class Context
     }
 
     /**
+     * Get the declension service
+     *
+     * @return \go\I18n\Declension\IDeclension
+     */
+    public function getDeclension()
+    {
+        if (!$this->declension) {
+            $config = isset($this->config['declension']) ? $this->config['declension'] : null;
+            $options = array(
+                'default' => 'go\I18n\Declension\Dict',
+                'base' => 'go\I18n\Declension\IDeclension',
+                'ns' => 'go\I18n\Declension',
+                'key' => 'declension',
+                'args' => array($this),
+            );
+            $this->declension = Creator::create($config, $options);
+        }
+        return $this->declension;
+    }
+
+    /**
      * @var \go\I18n\IO\IIO
      */
     private $io;
 
     /**
-     *
      * @var \go\I18n\Urls\IUrls
      */
     private $urls;
+
+    /**
+     * @var \go\I18n\Declension\IDeclension
+     */
+    private $declension;
 }
