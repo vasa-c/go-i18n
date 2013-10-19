@@ -59,7 +59,7 @@ abstract class Base implements INode
         }
         if (!$this->exists($path)) {
             if (\is_array($path)) {
-                $path = \implode($path);
+                $path = \implode('.', $path);
             }
             throw new UIKeyNotFound($this->pkey.$path);
         }
