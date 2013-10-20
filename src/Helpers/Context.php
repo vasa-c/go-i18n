@@ -141,6 +141,7 @@ class Context
             $options = array(
                 'default' => 'go\I18n\UI\RootSingleDir',
                 'base' => 'go\I18n\UI\INode',
+                'ns' => 'go\I18n\UI',
                 'key' => 'ui',
                 'args' => array($this),
             );

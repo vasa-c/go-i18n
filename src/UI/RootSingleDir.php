@@ -1,4 +1,10 @@
 <?php
+/**
+ * Implementation of a root node of UI (all data in a single dir)
+ *
+ * @package go\I18n
+ * @author Grigoriev Oleg aka vasa_c <go.vasac@gmail.com>
+ */
 
 namespace go\I18n\UI;
 
