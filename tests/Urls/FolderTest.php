@@ -325,4 +325,21 @@ class FolderTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('go\I18n\Exceptions\CurrentAlreadySpecified');
         $urls->resolve($params);
     }
+
+    public function testIsCLI()
+    {
+        $i18n = new I18n($this->testConfig);
+        $urls = $i18n->urls;
+        $params = $this->testParams;
+        $params['IS_CLI'] = true;
+        $result = $urls->resolve($params);
+        $this->assertEquals($result, $urls->getResolveResult());
+        $expected = array(
+            'language' => 'en',
+            'multi' => false,
+            'redirect' => null,
+            'rel_url' => null,
+        );
+        $this->assertEquals($expected, $result);
+    }
 }

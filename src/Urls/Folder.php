@@ -51,7 +51,7 @@ class Folder implements IUrls
             'redirect' => null,
             'rel_url' => null,
         );
-        if ($this->params['PHP_SAPI'] !== 'cli') {
+        if (!$this->isCLI()) {
             $this->doResolve();
         }
         if ($useres) {
@@ -228,6 +228,18 @@ class Folder implements IUrls
     }
 
     /**
+     * @return boolean
+     */
+    private function isCLI()
+    {
+        if (\is_bool($this->params['IS_CLI'])) {
+            return $this->params['IS_CLI'];
+        } else {
+            return ($this->params['PHP_SAPI'] === 'cli');
+        }
+    }
+
+    /**
      * @var array
      */
     private $params = array(
@@ -235,6 +247,7 @@ class Folder implements IUrls
         'PHP_SAPI' => '',
         'HTTP_HOST' => '',
         'HTTPS' => false,
+        'IS_CLI' => null,
     );
 
     /**
