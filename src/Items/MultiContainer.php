@@ -247,7 +247,7 @@ class MultiContainer implements IMultiContainer
             return true;
         }
         $config = $this->getConfigForSubcontainer($key);
-        if (!$config) {
+        if (!\is_array($config)) {
             return false;
         }
         $fkey = $this->pkey.$key;
@@ -271,7 +271,7 @@ class MultiContainer implements IMultiContainer
             return true;
         }
         $config = $this->getConfigForType($key);
-        if (!$config) {
+        if (!\is_array($config)) {
             return false;
         }
         $fkey = $this->pkey.$key;

@@ -80,7 +80,7 @@ abstract class DB implements IStorage
         $result = array();
         foreach ($this->select($cols, $where) as $row) {
             $value = $row[$cvalue];
-            if ($value === null) {
+            if (empty($value)) {
                 if ($cvalueb) {
                     $value = $row[$cvalueb];
                 }
@@ -135,7 +135,7 @@ abstract class DB implements IStorage
         }
         foreach ($this->select($cols, $where) as $row) {
             $value = $row[$cvalue];
-            if ($value === null) {
+            if (empty($value)) {
                 if ($cvalueb) {
                     $value = $row[$cvalueb];
                 }
