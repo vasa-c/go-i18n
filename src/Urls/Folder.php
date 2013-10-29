@@ -33,9 +33,7 @@ class Folder implements IUrls
      * @param array $params [optional]
      *        url parameters ($_SERVER by default)
      * @param boolean $useres
-     *        use a result for set variables to the i18n-object
-     * @return array
-     *         the resolve result (see the file head)
+     * @return \go\I18n\Urls\Result
      * @throws \go\I18n\Exceptions\UrlsAlreadyResolverd
      * @throws \go\I18n\Exceptions\CurrentAlreadySpecified
      */
@@ -57,17 +55,23 @@ class Folder implements IUrls
         if ($useres) {
             $this->context->i18n->setCurrentLanguage($this->result['language']);
         }
-        return $this->result;
+        return $this->getResolveResult();
     }
 
     /**
      * @override \go\I18n\Urls\IUrls
      *
-     * @return array
+     * @return \go\I18n\Urls\Result
      */
     public function getResolveResult()
     {
-        return $this->result;
+        if (!$this->oresult) {
+            if (!$this->result) {
+                return null;
+            }
+            $this->oresult = new Result($this->result);
+        }
+        return $this->oresult;
     }
 
     /**
@@ -269,4 +273,9 @@ class Folder implements IUrls
      * @var array
      */
     private $result;
+
+    /**
+     * @var \go\I18n\Urls\Result
+     */
+    private $oresult;
 }

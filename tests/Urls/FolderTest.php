@@ -66,8 +66,12 @@ class FolderTest extends \PHPUnit_Framework_TestCase
             'multi' => true,
             'redirect' => false,
             'rel_url' => 'about/company/?comment=5',
+            'rel_path' => 'about/company/',
+            'rel_folders' => array('about', 'company'),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
+        $this->assertEquals('ru', $result->language);
+        $this->assertTrue($result['multi']);
         $this->assertEquals('ru', $i18n->getCurrentLanguage());
     }
 
@@ -81,10 +85,12 @@ class FolderTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'language' => 'en',
             'multi' => false,
-            'redirect' => false,
+            'redirect' => null,
             'rel_url' => 'admin/news/?edit=5',
+            'rel_path' => 'admin/news/',
+            'rel_folders' => array('admin', 'news'),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
     }
 
     public function testResolveMultiInSingle()
@@ -99,8 +105,10 @@ class FolderTest extends \PHPUnit_Framework_TestCase
             'multi' => true,
             'redirect' => false,
             'rel_url' => 'admin/in/',
+            'rel_path' => 'admin/in/',
+            'rel_folders' => array('admin', 'in'),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
     }
 
     public function testRoot()
@@ -115,8 +123,10 @@ class FolderTest extends \PHPUnit_Framework_TestCase
             'multi' => true,
             'redirect' => 'http://example.loc/en/',
             'rel_url' => '',
+            'rel_path' => '',
+            'rel_folders' => array(),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
     }
 
     public function testRedirectPage()
@@ -131,8 +141,10 @@ class FolderTest extends \PHPUnit_Framework_TestCase
             'multi' => true,
             'redirect' => 'http://example.loc/en/page/?x=1',
             'rel_url' => 'page/?x=1',
+            'rel_path' => 'page/',
+            'rel_folders' => array('page'),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
     }
 
     public function testUserDef()
@@ -151,8 +163,10 @@ class FolderTest extends \PHPUnit_Framework_TestCase
             'multi' => true,
             'redirect' => 'http://example.loc/de/page/?x=1',
             'rel_url' => 'page/?x=1',
+            'rel_path' => 'page/',
+            'rel_folders' => array('page'),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
     }
 
     public function testRedirectSinglePage()
@@ -167,8 +181,10 @@ class FolderTest extends \PHPUnit_Framework_TestCase
             'multi' => false,
             'redirect' => 'http://example.loc/admin/news/?x=1',
             'rel_url' => 'admin/news/?x=1',
+            'rel_path' => 'admin/news/',
+            'rel_folders' => array('admin', 'news'),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
     }
 
     public function testCLI()
@@ -183,8 +199,10 @@ class FolderTest extends \PHPUnit_Framework_TestCase
             'multi' => false,
             'redirect' => false,
             'rel_url' => null,
+            'rel_path' => null,
+            'rel_folders' => array(),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
     }
 
     public function testUrl()
@@ -337,9 +355,11 @@ class FolderTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'language' => 'en',
             'multi' => false,
-            'redirect' => null,
+            'redirect' => false,
             'rel_url' => null,
+            'rel_path' => null,
+            'rel_folders' => array(),
         );
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $result->asArray());
     }
 }

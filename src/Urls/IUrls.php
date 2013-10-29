@@ -2,11 +2,7 @@
 /**
  * The interface of i18n->urls service
  *
- * Result of resolve:
- * "language" - the determined language version (null - see redirect)
- * "multi" - use the multi languages mode (boolean)
- * "redirect" - the url to redirect
- * "rel_url" - the relative url in this language version
+ * Result of resolve: see Result-class
  *
  * @package go\I18n
  * @author Grigoriev Oleg aka vasa_c <go.vasac@gmail.com>
@@ -23,7 +19,7 @@ interface IUrls
      *        the list of parameters for resolove (implementation depended)
      * @param boolean $useres
      *        use results for set parameters of the i18n object
-     * @return array
+     * @return \go\I18n\Urls\Result
      *         the result of resolve
      * @throws \go\I18n\Exceptions\UrlsAlreadyResolverd
      * @throws \go\I18n\Exceptions\CurrentAlreadySpecified
@@ -33,7 +29,7 @@ interface IUrls
     /**
      * Get the result of resolve
      *
-     * @return array
+     * @return \go\I18n\Urls\Result
      *         result or NULL if is not resolved
      */
     public function getResolveResult();
