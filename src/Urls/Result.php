@@ -83,7 +83,7 @@ class Result implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function __isset($key)
     {
-        return \array_key_exists($this->result[$key]);
+        return \array_key_exists($key, $this->result);
     }
 
     /**
